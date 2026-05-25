@@ -1,0 +1,77 @@
+{
+  "config": {
+    "sha256": {
+      "label": "SHA-256",
+      "saltPolicy": "optional",
+      "saltLabel": "Salt (optional)",
+      "defaultSalt": "",
+      "defaultKdf": "none",
+      "allowKdf": true
+    },
+    "argon2": {
+      "label": "Argon2",
+      "saltPolicy": "recommended",
+      "saltLabel": "Salt (recommended)",
+      "defaultSalt": "",
+      "defaultKdf": "argon2",
+      "allowKdf": false
+    },
+    "md5": {
+      "label": "MD5",
+      "saltPolicy": "none",
+      "saltLabel": "",
+      "defaultSalt": "",
+      "defaultKdf": "none",
+      "allowKdf": false
+    }
+  },
+  "kdfOptions": [
+    { "value": "none", "label": "No KDF" },
+    { "value": "pbkdf2", "label": "PBKDF2" },
+    { "value": "scrypt", "label": "scrypt" }
+  ],
+  "theory": {
+    "sha256": [
+      {
+        "title": "Mechanika działania",
+        "content": "SHA-256 przetwarza dane w blokach i produkuje 256-bitowy skrót. To funkcja jednokierunkowa, więc praktycznie nie da się odzyskać oryginalnych danych z wyniku."
+      },
+      {
+        "title": "Historia",
+        "content": "SHA-256 należy do rodziny SHA-2 opracowanej przez NSA i przyjętej jako nowoczesny standard po osłabieniu SHA-1."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "SHA-256 jest obecny w podpisach cyfrowych, blockchainie, integralności plików i wszędzie tam, gdzie potrzebne jest szybkie i odporne na kolizje haszowanie."
+      }
+    ],
+    "argon2": [
+      {
+        "title": "Mechanika działania",
+        "content": "Argon2 jest funkcją pamięciochłonną, która celowo zużywa zasoby RAM, żeby spowolnić ataki równoległe i GPU."
+      },
+      {
+        "title": "Historia",
+        "content": "Argon2 wygrał konkurs Password Hashing Competition w 2015 roku i został zaprojektowany jako odpowiedź na rosnącą moc sprzętu do łamania haseł."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "Argon2 jest rekomendowany do przechowywania haseł użytkowników, bo lepiej niż klasyczne hashe broni się przed atakami offline."
+      }
+    ],
+    "md5": [
+      {
+        "title": "Mechanika działania",
+        "content": "MD5 generuje 128-bitowy skrót szybko, ale bez odporności na kolizje. To czyni go niewłaściwym do zastosowań bezpieczeństwa."
+      },
+      {
+        "title": "Historia",
+        "content": "MD5 powstał w 1991 roku jako następca MD4, lecz z czasem okazało się, że nie spełnia współczesnych wymagań kryptograficznych."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "Dziś MD5 nadaje się głównie do niekrytycznych sum kontrolnych lub celów zgodności ze starymi systemami, ale nie do ochrony danych."
+      }
+    ]
+  }
+}

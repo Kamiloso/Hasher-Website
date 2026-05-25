@@ -1,0 +1,46 @@
+{
+  "theory": {
+    "dictionary": [
+      {
+        "title": "Mechanika działania",
+        "content": "Dictionary attacks sprawdzają najpierw popularne i podobne do człowieka hasła. Są szybkie, ale łatwo przegrywają z dobrze dobranymi sekretami."
+      },
+      {
+        "title": "Historia",
+        "content": "Ataki słownikowe to jedna z najstarszych technik łamania haseł, rozwijana razem z pierwszymi systemami opartymi na prostych politykach logowania."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "Ta metoda świetnie pokazuje, dlaczego polityki siły hasła, MFA i blokady kont są potrzebne w praktyce."
+      }
+    ],
+    "bruteForce": [
+      {
+        "title": "Mechanika działania",
+        "content": "Brute force wypróbowuje wszystkie kombinacje znaków w zadanym zakresie. Skuteczność istnieje w teorii, ale koszt szybko rośnie wykładniczo."
+      },
+      {
+        "title": "Historia",
+        "content": "To najbardziej bezpośrednia forma ataku na hasła i od lat stanowi punkt odniesienia przy ocenie realnej odporności innych technik."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "Używa się go głównie do testowania i demonstracji, bo dobrze pokazuje związek między długością hasła, alfabetem i czasem łamania."
+      }
+    ],
+    "hybrid": [
+      {
+        "title": "Mechanika działania",
+        "content": "Hybrid attacks łączą słownik z regułami, np. dodawaniem cyfr, zmianą wielkości liter czy dopiskami na końcu."
+      },
+      {
+        "title": "Historia",
+        "content": "Hybrydowe techniki pojawiły się jako odpowiedź na coraz lepsze polityki haseł, które wymusiły bardziej elastyczne metody zgadywania."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "To praktyczny kompromis między szybkością słownika a zasięgiem brute force, często używany w audytach bezpieczeństwa."
+      }
+    ]
+  }
+}

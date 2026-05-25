@@ -1,0 +1,120 @@
+{
+  "aes": {
+    "label": "AES-256 (GCM Mode)",
+    "mode": "symmetric",
+    "keyLabel": "Symmetric Key",
+    "keyPlaceholder": "Enter 32-byte key or passphrase...",
+    "showNonce": true,
+    "nonceLabel": "Nonce / IV",
+    "noncePlaceholder": "Enter 12-byte nonce...",
+    "showSalt": true,
+    "saltLabel": "Salt (for key derivation)",
+    "saltPlaceholder": "Enter optional salt...",
+    "showCounter": false,
+    "showCustomKeys": false
+  },
+  "chacha": {
+    "label": "ChaCha20",
+    "mode": "stream",
+    "keyLabel": "Symmetric Key",
+    "keyPlaceholder": "Enter 32-byte key...",
+    "showNonce": true,
+    "nonceLabel": "Nonce",
+    "noncePlaceholder": "Enter 96-bit nonce...",
+    "showSalt": false,
+    "saltLabel": "",
+    "saltPlaceholder": "",
+    "showCounter": true,
+    "counterLabel": "Initial Counter",
+    "counterPlaceholder": "0",
+    "showCustomKeys": false
+  },
+  "rsa": {
+    "label": "RSA-2048",
+    "mode": "asymmetric",
+    "keyLabel": "Key Pair",
+    "keyPlaceholder": "",
+    "showNonce": false,
+    "nonceLabel": "",
+    "noncePlaceholder": "",
+    "showSalt": false,
+    "saltLabel": "",
+    "saltPlaceholder": "",
+    "showCounter": false,
+    "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
+    "showCustomKeys": true
+  },
+  "ecc": {
+    "label": "ECC (secp256r1)",
+    "mode": "asymmetric",
+    "keyLabel": "Key Pair",
+    "keyPlaceholder": "",
+    "showNonce": false,
+    "nonceLabel": "",
+    "noncePlaceholder": "",
+    "showSalt": false,
+    "saltLabel": "",
+    "saltPlaceholder": "",
+    "showCounter": false,
+    "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
+    "showCustomKeys": true
+  },
+  "theory": {
+    "aes": [
+      {
+        "title": "Mechanika działania",
+        "content": "AES działa jako szyfr blokowy z siecią podstawień i permutacji. Dane są dzielone na bloki 128-bitowe, a kolejne rundy mieszają je z kluczem w kontrolowany sposób."
+      },
+      {
+        "title": "Historia",
+        "content": "AES został wybrany w konkursie NIST i standaryzowany w 2001 roku jako następca DES. Do dziś jest podstawą wielu współczesnych protokołów bezpieczeństwa."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "AES jest używany w VPN-ach, dyskach szyfrowanych, komunikacji HTTPS i wszędzie tam, gdzie potrzebne jest szybkie i silne szyfrowanie symetryczne."
+      }
+    ],
+    "chacha": [
+      {
+        "title": "Mechanika działania",
+        "content": "ChaCha20 to szybki szyfr strumieniowy, który miesza klucz, nonce i licznik w kolejne bloki keystreamu, a potem XOR-uje je z danymi."
+      },
+      {
+        "title": "Historia",
+        "content": "ChaCha20 został zaprojektowany jako praktyczna alternatywa dla AES na sprzęcie bez akceleracji, szczególnie na urządzeniach mobilnych i w środowiskach programowych."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "ChaCha20 jest często używany w nowoczesnych protokołach sieciowych, gdzie liczy się wydajność i odporność na różnice sprzętowe."
+      }
+    ],
+    "rsa": [
+      {
+        "title": "Mechanika działania",
+        "content": "RSA wykorzystuje parę kluczy: publiczny do szyfrowania i prywatny do odszyfrowania. Bezpieczeństwo opiera się na trudności rozkładu dużych liczb na czynniki pierwsze."
+      },
+      {
+        "title": "Historia",
+        "content": "RSA został opisany w 1977 roku przez Rivesta, Shamira i Adlemana i stał się jednym z najważniejszych algorytmów kryptografii asymetrycznej."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "RSA jest szeroko stosowany w podpisach cyfrowych, wymianie kluczy i starszych wdrożeniach szyfrowania, gdzie kompatybilność bywa ważniejsza niż wydajność."
+      }
+    ],
+    "ecc": [
+      {
+        "title": "Mechanika działania",
+        "content": "ECC opiera się na arytmetyce krzywych eliptycznych i umożliwia osiągnięcie wysokiego poziomu bezpieczeństwa przy krótszych kluczach niż RSA."
+      },
+      {
+        "title": "Historia",
+        "content": "Kryptografia eliptyczna zyskała popularność, gdy okazało się, że może dawać podobny poziom ochrony przy mniejszym koszcie obliczeniowym i pamięciowym."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "ECC jest wykorzystywany w podpisach, wymianie kluczy i systemach, gdzie ważne są krótkie klucze oraz dobra wydajność na ograniczonym sprzęcie."
+      }
+    ]
+  }
+}
