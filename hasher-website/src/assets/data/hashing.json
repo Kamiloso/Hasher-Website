@@ -1,4 +1,9 @@
 {
+  "algorithmOptions": [
+    { "value": "sha256", "label": "SHA-256" },
+    { "value": "argon2", "label": "Argon2 (Password Hashing)" },
+    { "value": "md5", "label": "MD5 (Legacy / Insecure)" }
+  ],
   "config": {
     "sha256": {
       "label": "SHA-256",
@@ -14,15 +19,16 @@
       "saltLabel": "Salt (recommended)",
       "defaultSalt": "",
       "defaultKdf": "argon2",
-      "allowKdf": false
+      "allowKdf": false,
+      "builtInKdfLabel": "Argon2 (built-in)"
     },
     "md5": {
       "label": "MD5",
-      "saltPolicy": "none",
-      "saltLabel": "",
+      "saltPolicy": "optional",
+      "saltLabel": "Salt (optional)",
       "defaultSalt": "",
       "defaultKdf": "none",
-      "allowKdf": false
+      "allowKdf": true
     }
   },
   "kdfOptions": [

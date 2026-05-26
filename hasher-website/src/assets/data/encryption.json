@@ -1,63 +1,164 @@
 {
+  "algorithmOptions": [
+    { "value": "aes", "label": "AES-256 (GCM Mode)" },
+    { "value": "chacha", "label": "ChaCha20" },
+    { "value": "rsa", "label": "RSA-2048" },
+    { "value": "ecc", "label": "ECC (secp256r1)" },
+    { "value": "demo", "label": "Control Preview (Test Algorithm)" }
+  ],
   "aes": {
     "label": "AES-256 (GCM Mode)",
     "mode": "symmetric",
+    "keyInputType": "byte",
     "keyLabel": "Symmetric Key",
     "keyPlaceholder": "Enter 32-byte key or passphrase...",
-    "showNonce": true,
-    "nonceLabel": "Nonce / IV",
-    "noncePlaceholder": "Enter 12-byte nonce...",
+    "keyByteField": {
+      "label": "Symmetric Key",
+      "byteLength": 32,
+      "columns": 8
+    },
+    "byteFields": [
+      {
+        "key": "nonce",
+        "label": "Nonce",
+        "byteLength": 12,
+        "columns": 8,
+        "placeholder": "Enter nonce bytes..."
+      },
+      {
+        "key": "iv",
+        "label": "IV",
+        "byteLength": 16,
+        "columns": 8,
+        "placeholder": "Enter IV bytes..."
+      }
+    ],
+    "generateAction": {
+      "label": "Generate Key, Nonce, and IV",
+      "fields": ["symmetric", "nonce", "iv"],
+      "outputKind": "bytes"
+    },
     "showSalt": true,
     "saltLabel": "Salt (for key derivation)",
     "saltPlaceholder": "Enter optional salt...",
     "showCounter": false,
-    "showCustomKeys": false
+    "showCustomKeys": false,
+    "nonceBytes": 12
   },
   "chacha": {
     "label": "ChaCha20",
     "mode": "stream",
+    "keyInputType": "byte",
     "keyLabel": "Symmetric Key",
     "keyPlaceholder": "Enter 32-byte key...",
-    "showNonce": true,
-    "nonceLabel": "Nonce",
-    "noncePlaceholder": "Enter 96-bit nonce...",
+    "keyByteField": {
+      "label": "Symmetric Key",
+      "byteLength": 32,
+      "columns": 8
+    },
+    "byteFields": [
+      {
+        "key": "nonce",
+        "label": "Nonce",
+        "byteLength": 12,
+        "columns": 8,
+        "placeholder": "Enter 96-bit nonce..."
+      }
+    ],
+    "generateAction": {
+      "label": "Generate Key and Nonce",
+      "fields": ["symmetric", "nonce"],
+      "outputKind": "bytes"
+    },
     "showSalt": false,
     "saltLabel": "",
     "saltPlaceholder": "",
     "showCounter": true,
     "counterLabel": "Initial Counter",
     "counterPlaceholder": "0",
-    "showCustomKeys": false
+    "showCustomKeys": false,
+    "nonceBytes": 12
   },
   "rsa": {
     "label": "RSA-2048",
     "mode": "asymmetric",
+    "keyInputType": "text",
     "keyLabel": "Key Pair",
     "keyPlaceholder": "",
-    "showNonce": false,
-    "nonceLabel": "",
-    "noncePlaceholder": "",
+    "keyTextPlaceholder": "Paste RSA key material or generated key text...",
+    "byteFields": [],
+    "generateAction": {
+      "label": "Generate Key Pair",
+      "fields": ["publicKey", "privateKey"],
+      "outputKind": "text"
+    },
     "showSalt": false,
     "saltLabel": "",
     "saltPlaceholder": "",
     "showCounter": false,
     "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
-    "showCustomKeys": true
+    "showCustomKeys": true,
+    "nonceBytes": 0
   },
   "ecc": {
     "label": "ECC (secp256r1)",
     "mode": "asymmetric",
+    "keyInputType": "byte",
     "keyLabel": "Key Pair",
     "keyPlaceholder": "",
-    "showNonce": false,
-    "nonceLabel": "",
-    "noncePlaceholder": "",
+    "keyByteField": {
+      "label": "Key Bytes",
+      "byteLength": 24,
+      "columns": 8
+    },
+    "byteFields": [],
+    "generateAction": {
+      "label": "Generate Key Pair",
+      "fields": ["publicKey", "privateKey"],
+      "outputKind": "bytes"
+    },
     "showSalt": false,
     "saltLabel": "",
     "saltPlaceholder": "",
     "showCounter": false,
     "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
-    "showCustomKeys": true
+    "showCustomKeys": true,
+    "nonceBytes": 0
+  },
+  "demo": {
+    "label": "Control Preview (Test Algorithm)",
+    "mode": "preview",
+    "keyInputType": "byte",
+    "keyLabel": "Preview Keys",
+    "keyPlaceholder": "",
+    "keyByteField": {
+      "label": "Preview Bytes",
+      "byteLength": 24,
+      "columns": 8
+    },
+    "byteFields": [],
+    "showSalt": false,
+    "saltLabel": "",
+    "saltPlaceholder": "",
+    "showCounter": false,
+    "showCustomKeys": false,
+    "nonceBytes": 0,
+    "preview": {
+      "shortInputLabel": "Pole tekstowe krótkie",
+      "shortInputPlaceholder": "Krótki tekst wejściowy...",
+      "longInputLabel": "Pole tekstowe długie",
+      "longInputPlaceholder": "Długi tekst wejściowy...",
+      "byteFieldLabel": "Pole bajtowe",
+      "byteFieldByteLength": 12,
+      "byteFieldColumns": 8,
+      "shortOutputLabel": "Pole output krótkie",
+      "shortOutputValue": "TEST OUTPUT: SHORT",
+      "longOutputLabel": "Pole output długie",
+      "longOutputValue": "TEST OUTPUT: To jest dłuższy przykładowy wynik tekstowy, który można skopiować jednym kliknięciem.",
+      "byteOutputLabel": "Pole output bajtowe",
+      "byteOutputByteLength": 12,
+      "byteOutputColumns": 8
+    }
   },
   "theory": {
     "aes": [
@@ -114,6 +215,20 @@
       {
         "title": "Zastosowanie",
         "content": "ECC jest wykorzystywany w podpisach, wymianie kluczy i systemach, gdzie ważne są krótkie klucze oraz dobra wydajność na ograniczonym sprzęcie."
+      }
+    ],
+    "demo": [
+      {
+        "title": "Mechanika działania",
+        "content": "Ten tryb nie jest prawdziwym algorytmem kryptograficznym. Służy jako demonstracja gotowych kontrolek wejścia, wyjścia, kopii i układu bajtów."
+      },
+      {
+        "title": "Historia",
+        "content": "Został dodany wyłącznie do weryfikacji interfejsu i ergonomii."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "Umożliwia szybką kontrolę wszystkich wariantów pól i przycisków bez przełączania między osobnymi widokami."
       }
     ]
   }

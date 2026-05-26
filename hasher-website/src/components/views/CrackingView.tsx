@@ -5,6 +5,7 @@ import crackingData from '../../assets/data/cracking.json';
 const CrackingView = () => {
   const [attackMode, setAttackMode] = useState<'dictionary' | 'brute-force' | 'hybrid'>('dictionary');
   const theoryKey = attackMode === 'brute-force' ? 'bruteForce' : attackMode;
+  const modeOptions = crackingData.modeOptions as Array<{ value: 'dictionary' | 'brute-force' | 'hybrid'; label: string }>;
 
   return (
     <section className="tool-section">
@@ -18,9 +19,11 @@ const CrackingView = () => {
             value={attackMode}
             onChange={(e) => setAttackMode(e.target.value as 'dictionary' | 'brute-force' | 'hybrid')}
           >
-            <option value="dictionary">Dictionary Attack</option>
-            <option value="brute-force">Brute Force</option>
-            <option value="hybrid">Hybrid Attack</option>
+            {modeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 

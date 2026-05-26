@@ -1,4 +1,9 @@
 {
+  "modeOptions": [
+    { "value": "dictionary", "label": "Dictionary Attack" },
+    { "value": "brute-force", "label": "Brute Force" },
+    { "value": "hybrid", "label": "Hybrid Attack" }
+  ],
   "theory": {
     "dictionary": [
       {

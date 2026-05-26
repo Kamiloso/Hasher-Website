@@ -1,31 +1,52 @@
 import { useState } from 'react';
 import TheoryPanel from '../TheoryPanel';
 import hashingData from '../../assets/data/hashing.json';
+import { ActionButton, LongOutputField, LongTextField, ShortTextField } from '../FormControls';
 
-const HASH_CONFIG = hashingData.config as Record<
-  'sha256' | 'argon2' | 'md5',
-  {
-    label: string;
-    saltPolicy: 'optional' | 'recommended' | 'none';
-    saltLabel: string;
-    defaultSalt: string;
-    defaultKdf: 'none' | 'pbkdf2' | 'scrypt' | 'argon2';
-    allowKdf: boolean;
-  }
->;
+type HashTheoryBlock = {
+  title: string;
+  content: string;
+};
 
-const KDF_OPTIONS = hashingData.kdfOptions as Array<{ value: 'none' | 'pbkdf2' | 'scrypt'; label: string }>;
+type HashingDataset = {
+  algorithmOptions: Array<{ value: string; label: string }>;
+  config: Record<
+    string,
+    {
+      label: string;
+      saltPolicy: 'optional' | 'recommended' | 'none';
+      saltLabel: string;
+      defaultSalt: string;
+      defaultKdf: 'none' | 'pbkdf2' | 'scrypt' | 'argon2';
+      allowKdf: boolean;
+      builtInKdfLabel?: string;
+    }
+  >;
+  kdfOptions: Array<{ value: 'none' | 'pbkdf2' | 'scrypt'; label: string }>;
+  theory: Record<string, HashTheoryBlock[]>;
+};
+
+const HASHING_DATA = hashingData as unknown as HashingDataset;
+
+const KDF_OPTIONS = HASHING_DATA.kdfOptions;
+const ALGORITHM_OPTIONS = HASHING_DATA.algorithmOptions;
 
 const HashingView = () => {
-  const [hashAlgo, setHashAlgo] = useState<'sha256' | 'argon2' | 'md5'>('sha256');
+  const [hashAlgo, setHashAlgo] = useState(ALGORITHM_OPTIONS[0]?.value ?? '');
   const [kdf, setKdf] = useState<'none' | 'pbkdf2' | 'scrypt' | 'argon2'>('none');
   const [iterations, setIterations] = useState(100000);
   const [salt, setSalt] = useState('');
+  const [hashInputText, setHashInputText] = useState('');
+  const [hashOutputText] = useState('TEST OUTPUT: 9F 86 D0 81 88 4C 7D 65 9A 2F EA A0 C5 5A D0 15 A3 BF 4F 1B 2B 0B 82 2C D1 5D 6C 15 B0 F0 0A 08');
 
-  const config = HASH_CONFIG[hashAlgo];
+  const config = HASHING_DATA.config[hashAlgo] ?? HASHING_DATA.config[ALGORITHM_OPTIONS[0]?.value ?? ''];
+  if (!config) {
+    return null;
+  }
+
   const showSalt = config.saltPolicy !== 'none';
-  const showKdf = config.allowKdf || hashAlgo === 'sha256';
-  const effectiveKdf = hashAlgo === 'argon2' ? 'argon2' : kdf;
+  const showKdf = config.allowKdf || config.defaultKdf === 'argon2';
+  const effectiveKdf = config.defaultKdf === 'argon2' ? 'argon2' : kdf;
 
   return (
     <section className="tool-section">
@@ -34,14 +55,16 @@ const HashingView = () => {
         
         <div className="control-group">
           <label htmlFor="hash-select">Hash Function</label>
-          <select 
-            id="hash-select" 
-            value={hashAlgo} 
-            onChange={(e) => setHashAlgo(e.target.value as 'sha256' | 'argon2' | 'md5')}
+          <select
+            id="hash-select"
+            value={hashAlgo}
+            onChange={(e) => setHashAlgo(e.target.value)}
           >
-            <option value="sha256">SHA-256</option>
-            <option value="argon2">Argon2 (Password Hashing)</option>
-            <option value="md5">MD5 (Legacy / Insecure)</option>
+            {ALGORITHM_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -55,7 +78,7 @@ const HashingView = () => {
               disabled={hashAlgo === 'argon2'}
             >
               {hashAlgo === 'argon2' ? (
-                <option value="argon2">Argon2 (built-in)</option>
+                <option value="argon2">{config.builtInKdfLabel}</option>
               ) : (
                 KDF_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -81,38 +104,46 @@ const HashingView = () => {
           </div>
         )}
 
-        <div className="control-group">
-          <label>Input Data</label>
-          <textarea placeholder="Enter string to hash..." rows={4}></textarea>
-        </div>
+        <LongTextField
+          label="Input Data"
+          value={hashInputText}
+          onChange={setHashInputText}
+          onReset={() => setHashInputText('')}
+          placeholder="Enter string to hash..."
+          helperText="Hashing pozostaje tekstowe, bez byte fieldów."
+          rows={4}
+        />
 
         {showSalt && (
-          <div className="control-group">
-            <label>{config.saltLabel}</label>
-            <input
-              type="text"
-              placeholder={
-                hashAlgo === 'argon2'
-                  ? 'Enter cryptographic salt...'
-                  : 'Enter salt if you want one...'
-              }
-              value={salt}
-              onChange={(e) => setSalt(e.target.value)}
-            />
-          </div>
+          <ShortTextField
+            label={config.saltLabel}
+            value={salt}
+            onChange={setSalt}
+            onReset={() => setSalt('')}
+            placeholder={
+              hashAlgo === 'argon2'
+                ? 'Enter cryptographic salt...'
+                : 'Enter salt if you want one...'
+            }
+            helperText="Salt można kopiować i resetować tak samo jak inne pola tekstowe."
+          />
         )}
 
         <div className="action-buttons">
-          <button className="primary-btn">Compute Hash</button>
+          <ActionButton variant="primary">Compute Hash</ActionButton>
+          <ActionButton variant="secondary">Reset</ActionButton>
         </div>
 
-        <div className="control-group">
-          <label>Hash Output (Hexadecimal)</label>
-          <textarea placeholder="Computed hash will appear here..." readOnly rows={3}></textarea>
-        </div>
+        <LongOutputField
+          label="Hash Output (Hexadecimal)"
+          value={hashOutputText}
+          placeholder="TEST OUTPUT: 9F 86 D0 81 88 4C 7D 65 9A 2F EA A0 C5 5A D0 15 A3 BF 4F 1B 2B 0B 82 2C D1 5D 6C 15 B0 F0 0A 08"
+          rows={3}
+          helperText="Wynik hasha pozostaje tekstowy i kopiowalny."
+        />
       </div>
 
-      <TheoryPanel blocks={hashingData.theory[hashAlgo]} />
+      <TheoryPanel blocks={HASHING_DATA.theory[hashAlgo] ?? []} />
     </section>
   );
 };
