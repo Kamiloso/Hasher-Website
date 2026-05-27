@@ -1,35 +1,37 @@
 {
   "algorithmOptions": [
     { "value": "sha256", "label": "SHA-256" },
-    { "value": "argon2", "label": "Argon2 (Password Hashing)" },
-    { "value": "md5", "label": "MD5 (Legacy / Insecure)" }
+    { "value": "sha512", "label": "SHA-512" },
+    { "value": "sha3_256", "label": "SHA3-256" },
+    { "value": "blake3", "label": "BLAKE3" },
+    { "value": "blake2b", "label": "BLAKE2b" },
+    { "value": "crc32", "label": "CRC32" },
+    { "value": "argon2", "label": "Argon2" },
+    { "value": "sha1", "label": "SHA-1" },
+    { "value": "md5", "label": "MD5" }
   ],
   "config": {
-    "sha256": {
-      "label": "SHA-256",
-      "saltPolicy": "optional",
-      "saltLabel": "Salt (optional)",
-      "defaultSalt": "",
-      "defaultKdf": "none",
-      "allowKdf": true
-    },
+    "sha256": { "label": "SHA-256", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true },
+    "sha512": { "label": "SHA-512", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true },
+    "sha3_256": { "label": "SHA3-256", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true },
+    "blake3": { "label": "BLAKE3", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true },
+    "blake2b": { "label": "BLAKE2b", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true },
+    "crc32": { "label": "CRC32", "saltPolicy": "none", "saltLabel": "", "defaultSalt": "", "defaultKdf": "none", "allowKdf": false },
     "argon2": {
       "label": "Argon2",
       "saltPolicy": "recommended",
       "saltLabel": "Salt (recommended)",
       "defaultSalt": "",
-      "defaultKdf": "argon2",
-      "allowKdf": false,
-      "builtInKdfLabel": "Argon2 (built-in)"
-    },
-    "md5": {
-      "label": "MD5",
-      "saltPolicy": "optional",
-      "saltLabel": "Salt (optional)",
-      "defaultSalt": "",
       "defaultKdf": "none",
-      "allowKdf": true
-    }
+      "allowKdf": false,
+      "argon2Params": {
+        "defaultMemoryKb": 65536,
+        "defaultParallelism": 2,
+        "defaultTimeCost": 3
+      }
+    },
+    "sha1": { "label": "SHA-1", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true },
+    "md5": { "label": "MD5", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true }
   },
   "kdfOptions": [
     { "value": "none", "label": "No KDF" },
@@ -37,46 +39,74 @@
     { "value": "scrypt", "label": "scrypt" }
   ],
   "theory": {
-    "sha256": [
+    "sha": [
       {
         "title": "Mechanika działania",
-        "content": "SHA-256 przetwarza dane w blokach i produkuje 256-bitowy skrót. To funkcja jednokierunkowa, więc praktycznie nie da się odzyskać oryginalnych danych z wyniku."
+        "content": "Rodzina SHA obejmuje kilka wariantów funkcji skrótu o różnej długości wyniku. Różnią się głównie rozmiarem skrótu i konstrukcją wewnętrzną, ale wszystkie służą do jednego kierunku haszowania."
       },
       {
         "title": "Historia",
-        "content": "SHA-256 należy do rodziny SHA-2 opracowanej przez NSA i przyjętej jako nowoczesny standard po osłabieniu SHA-1."
+        "content": "Rodzina SHA rozwijała się od SHA-1 (lata 90.), przez SHA-2 aż po SHA-3. W praktyce SHA-1 został wycofany z powodów bezpieczeństwa, a standardem stały się SHA-256 i SHA-512."
       },
       {
         "title": "Zastosowanie",
-        "content": "SHA-256 jest obecny w podpisach cyfrowych, blockchainie, integralności plików i wszędzie tam, gdzie potrzebne jest szybkie i odporne na kolizje haszowanie."
+        "content": "SHA stosuje się do integralności plików, podpisów i skrótów w protokołach bezpieczeństwa. Do haseł używa się wolnych KDF-ów (np. Argon2), nie samego SHA."
       }
     ],
     "argon2": [
       {
         "title": "Mechanika działania",
-        "content": "Argon2 jest funkcją pamięciochłonną, która celowo zużywa zasoby RAM, żeby spowolnić ataki równoległe i GPU."
+        "content": "Argon2 to funkcja skrótu zaprojektowana specjalnie do haszowania haseł, która wykorzystuje pamięć i czas jako parametry obciążenia, aby utrudnić ataki brute-force."
       },
       {
         "title": "Historia",
-        "content": "Argon2 wygrał konkurs Password Hashing Competition w 2015 roku i został zaprojektowany jako odpowiedź na rosnącą moc sprzętu do łamania haseł."
+        "content": "Argon2 wygrał Password Hashing Competition w 2015 roku jako następca starszych schematów, kładąc nacisk na koszt pamięciowy i odporność na ataki sprzętowe."
       },
       {
         "title": "Zastosowanie",
-        "content": "Argon2 jest rekomendowany do przechowywania haseł użytkowników, bo lepiej niż klasyczne hashe broni się przed atakami offline."
+        "content": "Argon2 służy do bezpiecznego haszowania haseł i KDF-ów. W praktyce dobiera się parametry pamięci, czasu i równoległości pod środowisko produkcyjne."
+      }
+    ],
+    "blake": [
+      {
+        "title": "Mechanika działania",
+        "content": "BLAKE2b i BLAKE3 to nowoczesne funkcje skrótu zaprojektowane z myślą o wysokiej wydajności i dobrym bezpieczeństwie."
+      },
+      {
+        "title": "Historia",
+        "content": "BLAKE był finalistą konkursu SHA-3, a później ewoluował do BLAKE2 i BLAKE3, kładąc nacisk na szybkość i prostotę implementacji."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "BLAKE używa się do szybkich skrótów, integralności danych i systemów content-addressable. BLAKE3 jest świetny do dużych strumieni, BLAKE2b do stabilnych wdrożeń."
+      }
+    ],
+    "crc32": [
+      {
+        "title": "Mechanika działania",
+        "content": "CRC32 to kontrolna suma obliczana szybko na podstawie wielomianu nad bitami danych. Służy do wykrywania błędów transmisji, a nie do ochrony kryptograficznej."
+      },
+      {
+        "title": "Historia",
+        "content": "CRC32 wywodzi się z telekomunikacji i systemów magazynowania danych jako szybki mechanizm wykrywania błędów transmisji."
+      },
+      {
+        "title": "Zastosowanie",
+        "content": "CRC32 służy do szybkiego wykrywania błędów w plikach i pakietach, ale nie zapewnia bezpieczeństwa kryptograficznego."
       }
     ],
     "md5": [
       {
         "title": "Mechanika działania",
-        "content": "MD5 generuje 128-bitowy skrót szybko, ale bez odporności na kolizje. To czyni go niewłaściwym do zastosowań bezpieczeństwa."
+        "content": "MD5 generuje krótki, szybki skrót, ale nie zapewnia odporności na kolizje w nowoczesnym sensie kryptograficznym."
       },
       {
         "title": "Historia",
-        "content": "MD5 powstał w 1991 roku jako następca MD4, lecz z czasem okazało się, że nie spełnia współczesnych wymagań kryptograficznych."
+        "content": "MD5 został zaprojektowany w 1991 roku, ale później znaleziono praktyczne kolizje, co wykluczyło go z zastosowań bezpieczeństwa."
       },
       {
         "title": "Zastosowanie",
-        "content": "Dziś MD5 nadaje się głównie do niekrytycznych sum kontrolnych lub celów zgodności ze starymi systemami, ale nie do ochrony danych."
+        "content": "MD5 bywa używany tylko w systemach legacy lub do niekryptograficznych sum kontrolnych. Do bezpieczeństwa wybiera się SHA-2/3 lub BLAKE."
       }
     ]
   }

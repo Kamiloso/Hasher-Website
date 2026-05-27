@@ -51,6 +51,9 @@ const ByteField = ({
     return next;
   }, [byteLength, value]);
 
+  const hasValue = bytes.some((byte) => byte.length > 0);
+  const canReset = hasValue && !readOnly;
+
   useEffect(() => {
     if (value.length !== byteLength) {
       onChange(bytes);
@@ -101,50 +104,46 @@ const ByteField = ({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     switch (event.key) {
-      case 'ArrowLeft':
-        event.preventDefault();
-        focusCell(index - 1);
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        focusCell(index + 1);
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        focusCell(index - columns);
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        focusCell(index + columns);
-        break;
-      case 'Home':
-        event.preventDefault();
-        focusCell(0);
-        break;
-      case 'End':
-        event.preventDefault();
-        focusCell(byteLength - 1);
-        break;
-      case 'Enter':
-        event.preventDefault();
-        focusCell(index + 1);
-        break;
+      case 'ArrowLeft': event.preventDefault(); focusCell(index - 1); break;
+      case 'ArrowRight': event.preventDefault(); focusCell(index + 1); break;
+      case 'ArrowUp': event.preventDefault(); focusCell(index - columns); break;
+      case 'ArrowDown': event.preventDefault(); focusCell(index + columns); break;
+      case 'Home': event.preventDefault(); focusCell(0); break;
+      case 'End': event.preventDefault(); focusCell(byteLength - 1); break;
+      case 'Enter': event.preventDefault(); focusCell(index + 1); break;
       case 'Backspace':
         if (!bytes[index] && index > 0) {
           event.preventDefault();
           focusCell(index - 1);
         }
         break;
-      default:
-        break;
+      default: break;
     }
+  };
+
+  const handleReset = () => {
+    if (!canReset) {
+      return;
+    }
+
+    onChange(Array.from({ length: byteLength }, () => ''));
   };
 
   return (
     <div className="control-group fixed-byte-field">
       <div className="field-header">
         <label>{label}</label>
-        <CopyButton text={bytes.filter(Boolean).join(' ')} />
+        <div className="control-actions">
+          <CopyButton text={bytes.filter(Boolean).join(' ')} disabled={!hasValue} />
+          <button
+            type="button"
+            className="copy-btn copy-btn--reset"
+            onClick={handleReset}
+            disabled={!canReset}
+          >
+            Reset
+          </button>
+        </div>
       </div>
       <div
         className="byte-editor"

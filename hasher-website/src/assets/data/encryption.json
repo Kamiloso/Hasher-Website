@@ -1,12 +1,17 @@
 {
   "algorithmOptions": [
-    { "value": "aes", "label": "AES-256 (GCM Mode)" },
-    { "value": "chacha", "label": "ChaCha20" },
-    { "value": "rsa", "label": "RSA-2048" },
-    { "value": "ecc", "label": "ECC (secp256r1)" },
-    { "value": "demo", "label": "Control Preview (Test Algorithm)" }
+    { "value": "aes_gcm", "label": "AES-256 (GCM)" },
+    { "value": "aes_cbc", "label": "AES-256 (CBC)" },
+    { "value": "aes_ctr", "label": "AES-256 (CTR)" },
+    { "value": "chacha20", "label": "ChaCha20" },
+    { "value": "chacha20_poly1305", "label": "ChaCha20-Poly1305" },
+    { "value": "rsa_oaep", "label": "RSA-2048 (OAEP)" },
+    { "value": "rsa_pss", "label": "RSA-2048 (PSS)" },
+    { "value": "ecc_p256", "label": "ECC (secp256r1)" },
+    { "value": "ecc_p384", "label": "ECC (secp384r1)" },
+    { "value": "blowfish", "label": "Blowfish" }
   ],
-  "aes": {
+  "aes_gcm": {
     "label": "AES-256 (GCM Mode)",
     "mode": "symmetric",
     "keyInputType": "byte",
@@ -34,7 +39,7 @@
       }
     ],
     "generateAction": {
-      "label": "Generate Key, Nonce, and IV",
+      "label": "Generate Keys",
       "fields": ["symmetric", "nonce", "iv"],
       "outputKind": "bytes"
     },
@@ -44,6 +49,37 @@
     "showCounter": false,
     "showCustomKeys": false,
     "nonceBytes": 12
+  },
+  "aes_cbc": {
+    "label": "AES-256 (CBC Mode)",
+    "mode": "symmetric",
+    "keyInputType": "byte",
+    "keyLabel": "Symmetric Key",
+    "keyPlaceholder": "Enter 32-byte key...",
+    "keyByteField": { "label": "Symmetric Key", "byteLength": 32, "columns": 8 },
+    "byteFields": [
+      { "key": "iv", "label": "IV", "byteLength": 16, "columns": 8, "placeholder": "Enter IV bytes..." }
+    ],
+    "generateAction": { "label": "Generate Keys", "fields": ["symmetric", "iv"], "outputKind": "bytes" },
+    "showSalt": true,
+    "saltLabel": "Salt",
+    "saltPlaceholder": "",
+    "showCounter": false,
+    "showCustomKeys": false,
+    "nonceBytes": 0
+  },
+  "aes_ctr": {
+    "label": "AES-256 (CTR Mode)",
+    "mode": "symmetric",
+    "keyInputType": "byte",
+    "keyLabel": "Symmetric Key",
+    "keyByteField": { "label": "Symmetric Key", "byteLength": 32, "columns": 8 },
+    "byteFields": [],
+    "generateAction": { "label": "Generate Keys", "fields": ["symmetric"], "outputKind": "bytes" },
+    "showSalt": false,
+    "showCounter": true,
+    "showCustomKeys": false,
+    "nonceBytes": 0
   },
   "chacha": {
     "label": "ChaCha20",
@@ -66,7 +102,7 @@
       }
     ],
     "generateAction": {
-      "label": "Generate Key and Nonce",
+      "label": "Generate Keys",
       "fields": ["symmetric", "nonce"],
       "outputKind": "bytes"
     },
@@ -79,6 +115,18 @@
     "showCustomKeys": false,
     "nonceBytes": 12
   },
+  "chacha20_poly1305": {
+    "label": "ChaCha20-Poly1305",
+    "mode": "stream",
+    "keyInputType": "byte",
+    "keyLabel": "Symmetric Key",
+    "keyByteField": { "label": "Symmetric Key", "byteLength": 32, "columns": 8 },
+    "byteFields": [ { "key": "nonce", "label": "Nonce", "byteLength": 12, "columns": 8 } ],
+    "generateAction": { "label": "Generate Keys", "fields": ["symmetric", "nonce"], "outputKind": "bytes" },
+    "showSalt": false,
+    "showCounter": true,
+    "nonceBytes": 12
+  },
   "rsa": {
     "label": "RSA-2048",
     "mode": "asymmetric",
@@ -88,7 +136,7 @@
     "keyTextPlaceholder": "Paste RSA key material or generated key text...",
     "byteFields": [],
     "generateAction": {
-      "label": "Generate Key Pair",
+      "label": "Generate Keys",
       "fields": ["publicKey", "privateKey"],
       "outputKind": "text"
     },
@@ -97,6 +145,32 @@
     "saltPlaceholder": "",
     "showCounter": false,
     "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
+    "showCustomKeys": true,
+    "nonceBytes": 0
+  },
+  "rsa_oaep": {
+    "label": "RSA-2048 (OAEP)",
+    "mode": "asymmetric",
+    "keyInputType": "text",
+    "keyLabel": "Key Pair",
+    "keyTextPlaceholder": "Paste RSA key...",
+    "byteFields": [],
+    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "text" },
+    "showSalt": false,
+    "showCounter": false,
+    "showCustomKeys": true,
+    "nonceBytes": 0
+  },
+  "rsa_pss": {
+    "label": "RSA-2048 (PSS)",
+    "mode": "asymmetric",
+    "keyInputType": "text",
+    "keyLabel": "Key Pair",
+    "keyTextPlaceholder": "Paste RSA key...",
+    "byteFields": [],
+    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "text" },
+    "showSalt": false,
+    "showCounter": false,
     "showCustomKeys": true,
     "nonceBytes": 0
   },
@@ -113,7 +187,7 @@
     },
     "byteFields": [],
     "generateAction": {
-      "label": "Generate Key Pair",
+      "label": "Generate Keys",
       "fields": ["publicKey", "privateKey"],
       "outputKind": "bytes"
     },
@@ -125,54 +199,52 @@
     "showCustomKeys": true,
     "nonceBytes": 0
   },
-  "demo": {
-    "label": "Control Preview (Test Algorithm)",
-    "mode": "preview",
+  "ecc_p256": {
+    "label": "ECC (secp256r1)",
+    "mode": "asymmetric",
     "keyInputType": "byte",
-    "keyLabel": "Preview Keys",
-    "keyPlaceholder": "",
-    "keyByteField": {
-      "label": "Preview Bytes",
-      "byteLength": 24,
-      "columns": 8
-    },
+    "keyByteField": { "label": "Key Bytes", "byteLength": 24, "columns": 8 },
     "byteFields": [],
+    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "bytes" },
+    "showCustomKeys": true,
+    "nonceBytes": 0
+  },
+  "ecc_p384": {
+    "label": "ECC (secp384r1)",
+    "mode": "asymmetric",
+    "keyInputType": "byte",
+    "keyByteField": { "label": "Key Bytes", "byteLength": 48, "columns": 8 },
+    "byteFields": [],
+    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "bytes" },
+    "showCustomKeys": true,
+    "nonceBytes": 0
+  },
+  "blowfish": {
+    "label": "Blowfish",
+    "mode": "symmetric",
+    "keyInputType": "byte",
+    "keyLabel": "Symmetric Key",
+    "keyByteField": { "label": "Key Bytes", "byteLength": 16, "columns": 8 },
+    "byteFields": [ { "key": "iv", "label": "IV", "byteLength": 8, "columns": 8 } ],
+    "generateAction": { "label": "Generate Keys", "fields": ["symmetric", "iv"], "outputKind": "bytes" },
     "showSalt": false,
-    "saltLabel": "",
-    "saltPlaceholder": "",
     "showCounter": false,
     "showCustomKeys": false,
-    "nonceBytes": 0,
-    "preview": {
-      "shortInputLabel": "Pole tekstowe krótkie",
-      "shortInputPlaceholder": "Krótki tekst wejściowy...",
-      "longInputLabel": "Pole tekstowe długie",
-      "longInputPlaceholder": "Długi tekst wejściowy...",
-      "byteFieldLabel": "Pole bajtowe",
-      "byteFieldByteLength": 12,
-      "byteFieldColumns": 8,
-      "shortOutputLabel": "Pole output krótkie",
-      "shortOutputValue": "TEST OUTPUT: SHORT",
-      "longOutputLabel": "Pole output długie",
-      "longOutputValue": "TEST OUTPUT: To jest dłuższy przykładowy wynik tekstowy, który można skopiować jednym kliknięciem.",
-      "byteOutputLabel": "Pole output bajtowe",
-      "byteOutputByteLength": 12,
-      "byteOutputColumns": 8
-    }
+    "nonceBytes": 0
   },
   "theory": {
     "aes": [
       {
         "title": "Mechanika działania",
-        "content": "AES działa jako szyfr blokowy z siecią podstawień i permutacji. Dane są dzielone na bloki 128-bitowe, a kolejne rundy mieszają je z kluczem w kontrolowany sposób."
+        "content": "AES to standardowy szyfr blokowy używany do szybkiego i bezpiecznego szyfrowania danych. Warianty GCM, CBC i CTR różnią się głównie sposobem użycia IV, nonce i uwierzytelniania."
       },
       {
         "title": "Historia",
-        "content": "AES został wybrany w konkursie NIST i standaryzowany w 2001 roku jako następca DES. Do dziś jest podstawą wielu współczesnych protokołów bezpieczeństwa."
+        "content": "Został wybrany w drodze konkursu ogłoszonego przez NIST w 1997 roku i oficjalnie zatwierdzony jako standard w 2001 roku, zastępując wysłużony algorytm DES."
       },
       {
         "title": "Zastosowanie",
-        "content": "AES jest używany w VPN-ach, dyskach szyfrowanych, komunikacji HTTPS i wszędzie tam, gdzie potrzebne jest szybkie i silne szyfrowanie symetryczne."
+        "content": "AES jest dobrym wyborem do plików, transmisji i lokalnego przechowywania danych. W praktyce klucz jest najważniejszym sekretem, a nonce lub IV bywają jawne, jednak ich unikalność i poprawne dobranie do trybu pracy są absolutnie kluczowe dla bezpieczeństwa."
       }
     ],
     "chacha": [
@@ -217,18 +289,18 @@
         "content": "ECC jest wykorzystywany w podpisach, wymianie kluczy i systemach, gdzie ważne są krótkie klucze oraz dobra wydajność na ograniczonym sprzęcie."
       }
     ],
-    "demo": [
+    "aes_gcm": [
       {
         "title": "Mechanika działania",
-        "content": "Ten tryb nie jest prawdziwym algorytmem kryptograficznym. Służy jako demonstracja gotowych kontrolek wejścia, wyjścia, kopii i układu bajtów."
+        "content": "AES działa jako szyfr blokowy z siecią podstawień i permutacji. Dane są dzielone na bloki 128-bitowe, a kolejne rundy mieszają je z kluczem w kontrolowany sposób."
       },
       {
         "title": "Historia",
-        "content": "Został dodany wyłącznie do weryfikacji interfejsu i ergonomii."
+        "content": "AES został wybrany w konkursie NIST i standaryzowany w 2001 roku jako następca DES. Do dziś jest podstawą wielu współczesnych protokołów bezpieczeństwa."
       },
       {
         "title": "Zastosowanie",
-        "content": "Umożliwia szybką kontrolę wszystkich wariantów pól i przycisków bez przełączania między osobnymi widokami."
+        "content": "AES jest używany w VPN-ach, dyskach szyfrowanych, komunikacji HTTPS i wszędzie tam, gdzie potrzebne jest szybkie i silne szyfrowanie symetryczne."
       }
     ]
   }

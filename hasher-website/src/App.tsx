@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import Navigation, { type TabType } from './components/Navigation';
-import EncryptionView from './components/views/EncryptionView';
-import HashingView from './components/views/HashingView';
-import CrackingView from './components/views/CrackingView';
+import EncryptionPresenter from './components/presenters/EncryptionPresenter';
+import HashingPresenter from './components/presenters/HashingPresenter';
 
 const getInitialTheme = () => {
   const storedTheme = window.localStorage.getItem('theme');
@@ -25,17 +24,8 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    document.title = 'Interactive Cryptography Studio';
+    document.title = 'Encryption & Hashing Algorithms';
   }, []);
-
-  const renderView = () => {
-    switch (activeTab) {
-      case 'encrypt': return <EncryptionView />;
-      case 'hash': return <HashingView />;
-      case 'crack': return <CrackingView />;
-      default: return null;
-    }
-  };
 
   return (
     <div className="app-container">
@@ -43,7 +33,7 @@ function App() {
         <div className="header-top">
           <div className="header-copy">
             <p className="eyebrow">Interactive cryptography studio</p>
-            <h1>Interactive Cryptography Studio</h1>
+            <h1>Encryption &amp; Hashing Algorithms</h1>
           </div>
 
           <button
@@ -63,7 +53,12 @@ function App() {
       </header>
 
       <main className="app-content">
-        {renderView()}
+        <section hidden={activeTab !== 'encrypt'} aria-hidden={activeTab !== 'encrypt'}>
+          <EncryptionPresenter />
+        </section>
+        <section hidden={activeTab !== 'hash'} aria-hidden={activeTab !== 'hash'}>
+          <HashingPresenter />
+        </section>
       </main>
     </div>
   );

@@ -20,9 +20,10 @@ type ActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 type CopyButtonProps = {
   text: string;
   className?: string;
+  disabled?: boolean;
 };
 
-const CopyButton = ({ text, className }: CopyButtonProps) => {
+const CopyButton = ({ text, className, disabled = false }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<number | null>(null);
 
@@ -35,7 +36,7 @@ const CopyButton = ({ text, className }: CopyButtonProps) => {
   }, []);
 
   const handleCopy = async () => {
-    if (!text) {
+    if (!text || disabled) {
       return;
     }
 
@@ -55,6 +56,7 @@ const CopyButton = ({ text, className }: CopyButtonProps) => {
     <button
       type="button"
       className={['copy-btn', copied ? 'copy-btn--copied' : '', className].filter(Boolean).join(' ')}
+      disabled={disabled}
       onClick={() => void handleCopy()}
     >
       {copied ? 'Copied' : 'Copy'}
@@ -73,17 +75,27 @@ const TextControl = ({
   multiline = false,
   readOnly = false
 }: TextControlProps) => {
+  const hasValue = value.trim().length > 0;
+  const canReset = hasValue && !readOnly;
+
   return (
     <div className="control-group control-field">
       <div className="field-header">
         <label>{label}</label>
         <div className="control-actions">
-          <CopyButton text={value} />
+          <CopyButton text={value} disabled={!hasValue} />
           <button
             type="button"
             className="copy-btn copy-btn--reset"
-            onClick={() => onReset?.()}
-            disabled={!onReset}
+            onClick={() => {
+              if (onReset) {
+                onReset();
+                return;
+              }
+
+              onChange?.('');
+            }}
+            disabled={!canReset}
           >
             Reset
           </button>

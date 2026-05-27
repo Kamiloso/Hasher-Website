@@ -1,8 +1,10 @@
+export type TheoryBlock = {
+  title: string;
+  content: string;
+};
+
 interface TheoryPanelProps {
-  blocks: Array<{
-    title: string;
-    content: string;
-  }>;
+  blocks: TheoryBlock[];
 }
 
 const TheoryPanel = ({ blocks }: TheoryPanelProps) => {

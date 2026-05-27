@@ -1,4 +1,4 @@
-export type TabType = 'encrypt' | 'hash' | 'crack';
+export type TabType = 'encrypt' | 'hash';
 
 interface NavigationProps {
   activeTab: TabType;
@@ -8,26 +8,19 @@ interface NavigationProps {
 const Navigation = ({ activeTab, setActiveTab }: NavigationProps) => {
   return (
     <nav className="tab-navigation">
-      <button 
+      <button
         type="button"
         className={`tab-btn ${activeTab === 'encrypt' ? 'active' : ''}`}
         onClick={() => setActiveTab('encrypt')}
       >
-        Encryption / Decryption
+        Encryption
       </button>
       <button 
         type="button"
         className={`tab-btn ${activeTab === 'hash' ? 'active' : ''}`}
         onClick={() => setActiveTab('hash')}
       >
-        Hashing Algorithms
-      </button>
-      <button 
-        type="button"
-        className={`tab-btn ${activeTab === 'crack' ? 'active' : ''}`}
-        onClick={() => setActiveTab('crack')}
-      >
-        Password Cracking
+        Hashing
       </button>
     </nav>
   );
