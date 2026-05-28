@@ -7,11 +7,6 @@ export type EncryptionFormState = {
   keyTextValues: Record<string, string>;
   salt: string;
   counter: string;
-  keySelection: string;
-  previewShortInput: string;
-  previewLongInput: string;
-  previewByteInput: string[];
-  previewByteOutput: string[];
 };
 
 export type HashFormState = {
@@ -49,12 +44,7 @@ export const createEncryptionFormState = (): EncryptionFormState => ({
     privateKey: ''
   },
   salt: '',
-  counter: '0',
-  keySelection: 'Use Public Key (for Encryption)',
-  previewShortInput: 'short input',
-  previewLongInput: 'This is a longer input used to inspect the long text field control in the preview algorithm.',
-  previewByteInput: generateByteSequence(12),
-  previewByteOutput: generateByteSequence(12)
+  counter: '0'
 });
 
 export const createHashFormState = (config: HashStateConfig): HashFormState => ({

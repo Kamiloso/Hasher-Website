@@ -1,15 +1,45 @@
 {
   "algorithmOptions": [
-    { "value": "aes_gcm", "label": "AES-256 (GCM)" },
-    { "value": "aes_cbc", "label": "AES-256 (CBC)" },
-    { "value": "aes_ctr", "label": "AES-256 (CTR)" },
-    { "value": "chacha20", "label": "ChaCha20" },
-    { "value": "chacha20_poly1305", "label": "ChaCha20-Poly1305" },
-    { "value": "rsa_oaep", "label": "RSA-2048 (OAEP)" },
-    { "value": "rsa_pss", "label": "RSA-2048 (PSS)" },
-    { "value": "ecc_p256", "label": "ECC (secp256r1)" },
-    { "value": "ecc_p384", "label": "ECC (secp384r1)" },
-    { "value": "blowfish", "label": "Blowfish" }
+    {
+      "value": "aes_gcm",
+      "label": "AES-256 (GCM)"
+    },
+    {
+      "value": "aes_cbc",
+      "label": "AES-256 (CBC)"
+    },
+    {
+      "value": "aes_ctr",
+      "label": "AES-256 (CTR)"
+    },
+    {
+      "value": "chacha20",
+      "label": "ChaCha20"
+    },
+    {
+      "value": "chacha20_poly1305",
+      "label": "ChaCha20-Poly1305"
+    },
+    {
+      "value": "rsa_oaep",
+      "label": "RSA-2048 (OAEP)"
+    },
+    {
+      "value": "rsa_pss",
+      "label": "RSA-2048 (PSS)"
+    },
+    {
+      "value": "ecc_p256",
+      "label": "ECC (secp256r1)"
+    },
+    {
+      "value": "ecc_p384",
+      "label": "ECC (secp384r1)"
+    },
+    {
+      "value": "blowfish",
+      "label": "Blowfish"
+    }
   ],
   "aes_gcm": {
     "label": "AES-256 (GCM Mode)",
@@ -40,15 +70,17 @@
     ],
     "generateAction": {
       "label": "Generate Keys",
-      "fields": ["symmetric", "nonce", "iv"],
+      "fields": [
+        "symmetric",
+        "nonce",
+        "iv"
+      ],
       "outputKind": "bytes"
     },
     "showSalt": true,
     "saltLabel": "Salt (for key derivation)",
     "saltPlaceholder": "Enter optional salt...",
-    "showCounter": false,
-    "showCustomKeys": false,
-    "nonceBytes": 12
+    "showCounter": false
   },
   "aes_cbc": {
     "label": "AES-256 (CBC Mode)",
@@ -56,30 +88,53 @@
     "keyInputType": "byte",
     "keyLabel": "Symmetric Key",
     "keyPlaceholder": "Enter 32-byte key...",
-    "keyByteField": { "label": "Symmetric Key", "byteLength": 32, "columns": 8 },
+    "keyByteField": {
+      "label": "Symmetric Key",
+      "byteLength": 32,
+      "columns": 8
+    },
     "byteFields": [
-      { "key": "iv", "label": "IV", "byteLength": 16, "columns": 8, "placeholder": "Enter IV bytes..." }
+      {
+        "key": "iv",
+        "label": "IV",
+        "byteLength": 16,
+        "columns": 8,
+        "placeholder": "Enter IV bytes..."
+      }
     ],
-    "generateAction": { "label": "Generate Keys", "fields": ["symmetric", "iv"], "outputKind": "bytes" },
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "symmetric",
+        "iv"
+      ],
+      "outputKind": "bytes"
+    },
     "showSalt": true,
     "saltLabel": "Salt",
     "saltPlaceholder": "",
-    "showCounter": false,
-    "showCustomKeys": false,
-    "nonceBytes": 0
+    "showCounter": false
   },
   "aes_ctr": {
     "label": "AES-256 (CTR Mode)",
     "mode": "symmetric",
     "keyInputType": "byte",
     "keyLabel": "Symmetric Key",
-    "keyByteField": { "label": "Symmetric Key", "byteLength": 32, "columns": 8 },
+    "keyByteField": {
+      "label": "Symmetric Key",
+      "byteLength": 32,
+      "columns": 8
+    },
     "byteFields": [],
-    "generateAction": { "label": "Generate Keys", "fields": ["symmetric"], "outputKind": "bytes" },
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "symmetric"
+      ],
+      "outputKind": "bytes"
+    },
     "showSalt": false,
-    "showCounter": true,
-    "showCustomKeys": false,
-    "nonceBytes": 0
+    "showCounter": true
   },
   "chacha": {
     "label": "ChaCha20",
@@ -103,7 +158,10 @@
     ],
     "generateAction": {
       "label": "Generate Keys",
-      "fields": ["symmetric", "nonce"],
+      "fields": [
+        "symmetric",
+        "nonce"
+      ],
       "outputKind": "bytes"
     },
     "showSalt": false,
@@ -111,21 +169,36 @@
     "saltPlaceholder": "",
     "showCounter": true,
     "counterLabel": "Initial Counter",
-    "counterPlaceholder": "0",
-    "showCustomKeys": false,
-    "nonceBytes": 12
+    "counterPlaceholder": "0"
   },
   "chacha20_poly1305": {
     "label": "ChaCha20-Poly1305",
     "mode": "stream",
     "keyInputType": "byte",
     "keyLabel": "Symmetric Key",
-    "keyByteField": { "label": "Symmetric Key", "byteLength": 32, "columns": 8 },
-    "byteFields": [ { "key": "nonce", "label": "Nonce", "byteLength": 12, "columns": 8 } ],
-    "generateAction": { "label": "Generate Keys", "fields": ["symmetric", "nonce"], "outputKind": "bytes" },
+    "keyByteField": {
+      "label": "Symmetric Key",
+      "byteLength": 32,
+      "columns": 8
+    },
+    "byteFields": [
+      {
+        "key": "nonce",
+        "label": "Nonce",
+        "byteLength": 12,
+        "columns": 8
+      }
+    ],
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "symmetric",
+        "nonce"
+      ],
+      "outputKind": "bytes"
+    },
     "showSalt": false,
-    "showCounter": true,
-    "nonceBytes": 12
+    "showCounter": true
   },
   "rsa": {
     "label": "RSA-2048",
@@ -137,16 +210,16 @@
     "byteFields": [],
     "generateAction": {
       "label": "Generate Keys",
-      "fields": ["publicKey", "privateKey"],
+      "fields": [
+        "publicKey",
+        "privateKey"
+      ],
       "outputKind": "text"
     },
     "showSalt": false,
     "saltLabel": "",
     "saltPlaceholder": "",
-    "showCounter": false,
-    "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
-    "showCustomKeys": true,
-    "nonceBytes": 0
+    "showCounter": false
   },
   "rsa_oaep": {
     "label": "RSA-2048 (OAEP)",
@@ -155,11 +228,16 @@
     "keyLabel": "Key Pair",
     "keyTextPlaceholder": "Paste RSA key...",
     "byteFields": [],
-    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "text" },
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "publicKey",
+        "privateKey"
+      ],
+      "outputKind": "text"
+    },
     "showSalt": false,
-    "showCounter": false,
-    "showCustomKeys": true,
-    "nonceBytes": 0
+    "showCounter": false
   },
   "rsa_pss": {
     "label": "RSA-2048 (PSS)",
@@ -168,11 +246,16 @@
     "keyLabel": "Key Pair",
     "keyTextPlaceholder": "Paste RSA key...",
     "byteFields": [],
-    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "text" },
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "publicKey",
+        "privateKey"
+      ],
+      "outputKind": "text"
+    },
     "showSalt": false,
-    "showCounter": false,
-    "showCustomKeys": true,
-    "nonceBytes": 0
+    "showCounter": false
   },
   "ecc": {
     "label": "ECC (secp256r1)",
@@ -188,49 +271,83 @@
     "byteFields": [],
     "generateAction": {
       "label": "Generate Keys",
-      "fields": ["publicKey", "privateKey"],
+      "fields": [
+        "publicKey",
+        "privateKey"
+      ],
       "outputKind": "bytes"
     },
     "showSalt": false,
     "saltLabel": "",
     "saltPlaceholder": "",
-    "showCounter": false,
-    "keyOptions": ["Use Public Key (for Encryption)", "Use Private Key (for Decryption)"],
-    "showCustomKeys": true,
-    "nonceBytes": 0
+    "showCounter": false
   },
   "ecc_p256": {
     "label": "ECC (secp256r1)",
     "mode": "asymmetric",
     "keyInputType": "byte",
-    "keyByteField": { "label": "Key Bytes", "byteLength": 24, "columns": 8 },
+    "keyByteField": {
+      "label": "Key Bytes",
+      "byteLength": 24,
+      "columns": 8
+    },
     "byteFields": [],
-    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "bytes" },
-    "showCustomKeys": true,
-    "nonceBytes": 0
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "publicKey",
+        "privateKey"
+      ],
+      "outputKind": "bytes"
+    }
   },
   "ecc_p384": {
     "label": "ECC (secp384r1)",
     "mode": "asymmetric",
     "keyInputType": "byte",
-    "keyByteField": { "label": "Key Bytes", "byteLength": 48, "columns": 8 },
+    "keyByteField": {
+      "label": "Key Bytes",
+      "byteLength": 48,
+      "columns": 8
+    },
     "byteFields": [],
-    "generateAction": { "label": "Generate Keys", "fields": ["publicKey", "privateKey"], "outputKind": "bytes" },
-    "showCustomKeys": true,
-    "nonceBytes": 0
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "publicKey",
+        "privateKey"
+      ],
+      "outputKind": "bytes"
+    }
   },
   "blowfish": {
     "label": "Blowfish",
     "mode": "symmetric",
     "keyInputType": "byte",
     "keyLabel": "Symmetric Key",
-    "keyByteField": { "label": "Key Bytes", "byteLength": 16, "columns": 8 },
-    "byteFields": [ { "key": "iv", "label": "IV", "byteLength": 8, "columns": 8 } ],
-    "generateAction": { "label": "Generate Keys", "fields": ["symmetric", "iv"], "outputKind": "bytes" },
+    "keyByteField": {
+      "label": "Key Bytes",
+      "byteLength": 16,
+      "columns": 8
+    },
+    "byteFields": [
+      {
+        "key": "iv",
+        "label": "IV",
+        "byteLength": 8,
+        "columns": 8
+      }
+    ],
+    "generateAction": {
+      "label": "Generate Keys",
+      "fields": [
+        "symmetric",
+        "iv"
+      ],
+      "outputKind": "bytes"
+    },
     "showSalt": false,
-    "showCounter": false,
-    "showCustomKeys": false,
-    "nonceBytes": 0
+    "showCounter": false
   },
   "theory": {
     "aes": [

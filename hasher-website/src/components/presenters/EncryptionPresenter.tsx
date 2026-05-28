@@ -41,9 +41,6 @@ type EncryptionConfigShape = {
   showCounter: boolean;
   counterLabel?: string;
   counterPlaceholder?: string;
-  showCustomKeys: boolean;
-  keyOptions?: string[];
-  nonceBytes: number;
 };
 
 type EncryptionTheoryBlock = TheoryBlock;
