@@ -352,72 +352,72 @@
   "theory": {
     "aes": [
       {
-        "title": "Mechanika działania",
-        "content": "AES to standardowy szyfr blokowy używany do szybkiego i bezpiecznego szyfrowania danych. Warianty GCM, CBC i CTR różnią się głównie sposobem użycia IV, nonce i uwierzytelniania."
+        "title": "Mechanism of Action",
+        "content": "AES (Advanced Encryption Standard) is a symmetric block cipher based on a substitution-permutation network. It operates on fixed 128-bit data blocks using key sizes of 128, 192, or 256 bits, processing data through multiple rounds of substitution, transposition, and mixing operations."
       },
       {
-        "title": "Historia",
-        "content": "Został wybrany w drodze konkursu ogłoszonego przez NIST w 1997 roku i oficjalnie zatwierdzony jako standard w 2001 roku, zastępując wysłużony algorytm DES."
+        "title": "History",
+        "content": "Officially standardized by NIST in 2001 (FIPS 197) after an open competition to replace the aging Data Encryption Standard (DES). It is based on the Rijndael cipher designed by Belgian cryptographers Joan Daemen and Vincent Rijmen."
       },
       {
-        "title": "Zastosowanie",
-        "content": "AES jest dobrym wyborem do plików, transmisji i lokalnego przechowywania danych. W praktyce klucz jest najważniejszym sekretem, a nonce lub IV bywają jawne, jednak ich unikalność i poprawne dobranie do trybu pracy są absolutnie kluczowe dla bezpieczeństwa."
+        "title": "Usage",
+        "content": "The global standard for symmetric encryption. It is utilized universally for securing data at rest (disk encryption) and data in transit (TLS/HTTPS). The specific mode of operation (like CBC or GCM) determines how it handles larger datasets and authentication."
       }
     ],
     "chacha": [
       {
-        "title": "Mechanika działania",
-        "content": "ChaCha20 to szybki szyfr strumieniowy, który miesza klucz, nonce i licznik w kolejne bloki keystreamu, a potem XOR-uje je z danymi."
+        "title": "Mechanism of Action",
+        "content": "ChaCha20 is a stream cipher that initializes a 512-bit state matrix using a 256-bit key, a 96-bit nonce, and a 32-bit counter. It applies 20 rounds of quarter-round operations (Addition, Rotation, and XOR) to generate a pseudorandom keystream, which is then XORed with the plaintext."
       },
       {
-        "title": "Historia",
-        "content": "ChaCha20 został zaprojektowany jako praktyczna alternatywa dla AES na sprzęcie bez akceleracji, szczególnie na urządzeniach mobilnych i w środowiskach programowych."
+        "title": "History",
+        "content": "Designed by Daniel J. Bernstein in 2008. It was created as an evolution of his earlier Salsa20 cipher to increase cryptographic diffusion per round while maintaining high performance in software."
       },
       {
-        "title": "Zastosowanie",
-        "content": "ChaCha20 jest często używany w nowoczesnych protokołach sieciowych, gdzie liczy się wydajność i odporność na różnice sprzętowe."
+        "title": "Usage",
+        "content": "Standardized in RFC 8439, it is heavily favored in environments that lack hardware-accelerated AES instructions (such as mobile devices). It is frequently paired with the Poly1305 authenticator to provide Authenticated Encryption with Associated Data (AEAD)."
       }
     ],
     "rsa": [
       {
-        "title": "Mechanika działania",
-        "content": "RSA wykorzystuje parę kluczy: publiczny do szyfrowania i prywatny do odszyfrowania. Bezpieczeństwo opiera się na trudności rozkładu dużych liczb na czynniki pierwsze."
+        "title": "Mechanism of Action",
+        "content": "RSA is an asymmetric cryptosystem utilizing a key pair: a public key for encryption and a private key for decryption. Its mathematical security is grounded in the practical difficulty of integer factorization—specifically, the challenge of factoring the product of two very large prime numbers."
       },
       {
-        "title": "Historia",
-        "content": "RSA został opisany w 1977 roku przez Rivesta, Shamira i Adlemana i stał się jednym z najważniejszych algorytmów kryptografii asymetrycznej."
+        "title": "History",
+        "content": "Publicly described in 1977 by Ron Rivest, Adi Shamir, and Leonard Adleman at MIT. It became the foundational algorithm for public-key infrastructure (PKI) across the early internet."
       },
       {
-        "title": "Zastosowanie",
-        "content": "RSA jest szeroko stosowany w podpisach cyfrowych, wymianie kluczy i starszych wdrożeniach szyfrowania, gdzie kompatybilność bywa ważniejsza niż wydajność."
+        "title": "Usage",
+        "content": "Due to its high computational overhead, RSA is rarely used to encrypt bulk data. According to RFC 8017, it is primarily employed for securely encapsulating symmetric keys (key wrapping) and generating digital signatures for certificates."
       }
     ],
     "ecc": [
       {
-        "title": "Mechanika działania",
-        "content": "ECC opiera się na arytmetyce krzywych eliptycznych i umożliwia osiągnięcie wysokiego poziomu bezpieczeństwa przy krótszych kluczach niż RSA."
+        "title": "Mechanism of Action",
+        "content": "Elliptic Curve Cryptography (ECC) is an approach to public-key cryptography based on the algebraic structure of elliptic curves over finite fields. Its security relies on the intractability of the Elliptic Curve Discrete Logarithm Problem (ECDLP)."
       },
       {
-        "title": "Historia",
-        "content": "Kryptografia eliptyczna zyskała popularność, gdy okazało się, że może dawać podobny poziom ochrony przy mniejszym koszcie obliczeniowym i pamięciowym."
+        "title": "History",
+        "content": "The use of elliptic curves in cryptography was suggested independently by Neal Koblitz and Victor Miller in 1985. It gained widespread standardization (FIPS 186-4) in the 2000s as computing transitioned to mobile environments."
       },
       {
-        "title": "Zastosowanie",
-        "content": "ECC jest wykorzystywany w podpisach, wymianie kluczy i systemach, gdzie ważne są krótkie klucze oraz dobra wydajność na ograniczonym sprzęcie."
+        "title": "Usage",
+        "content": "Provides equivalent cryptographic strength to RSA using significantly smaller key sizes (e.g., a 256-bit ECC key matches a 3072-bit RSA key). It is the modern standard for digital signatures (ECDSA) and key agreement protocols (ECDH)."
       }
     ],
     "aes_gcm": [
       {
-        "title": "Mechanika działania",
-        "content": "AES działa jako szyfr blokowy z siecią podstawień i permutacji. Dane są dzielone na bloki 128-bitowe, a kolejne rundy mieszają je z kluczem w kontrolowany sposób."
+        "title": "Mechanism of Action",
+        "content": "AES-GCM (Galois/Counter Mode) provides Authenticated Encryption with Associated Data (AEAD). It uses the Counter (CTR) mode of AES to encrypt the plaintext and simultaneously computes a Galois Message Authentication Code (GMAC) to verify the data's integrity."
       },
       {
-        "title": "Historia",
-        "content": "AES został wybrany w konkursie NIST i standaryzowany w 2001 roku jako następca DES. Do dziś jest podstawą wielu współczesnych protokołów bezpieczeństwa."
+        "title": "History",
+        "content": "Designed by David A. McGrew and John Viega. It was adopted as a NIST standard in 2007 (SP 800-38D) to fulfill the need for a high-speed, parallelizable authenticated encryption mode."
       },
       {
-        "title": "Zastosowanie",
-        "content": "AES jest używany w VPN-ach, dyskach szyfrowanych, komunikacji HTTPS i wszędzie tam, gdzie potrzebne jest szybkie i silne szyfrowanie symetryczne."
+        "title": "Usage",
+        "content": "The dominant cipher suite for modern secure communications, mandated in TLS 1.3, IPSec, and SSH. The standard strictly requires that a nonce must never be reused with the same key, as doing so compromises the authentication key entirely."
       }
     ]
   }
