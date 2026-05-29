@@ -41,72 +41,72 @@
   "theory": {
     "sha": [
       {
-        "title": "Mechanika działania",
-        "content": "Rodzina SHA obejmuje kilka wariantów funkcji skrótu o różnej długości wyniku. Różnią się głównie rozmiarem skrótu i konstrukcją wewnętrzną, ale wszystkie służą do jednego kierunku haszowania."
+        "title": "Mechanism of Action",
+        "content": "SHA-2 is built using the Merkle–Damgård structure, from a one-way compression function itself built using the Davies–Meyer structure from a specialized block cipher. SHA-3 is a subset of the broader cryptographic primitive family Keccak, based on a sponge construction."
       },
       {
-        "title": "Historia",
-        "content": "Rodzina SHA rozwijała się od SHA-1 (lata 90.), przez SHA-2 aż po SHA-3. W praktyce SHA-1 został wycofany z powodów bezpieczeństwa, a standardem stały się SHA-256 i SHA-512."
+        "title": "History",
+        "content": "SHA-1 was developed as part of the U.S. Government's Capstone project. SHA-2 was designed by the United States National Security Agency (NSA) and first published in 2001. SHA-3 was released by NIST on August 5, 2015."
       },
       {
-        "title": "Zastosowanie",
-        "content": "SHA stosuje się do integralności plików, podpisów i skrótów w protokołach bezpieczeństwa. Do haseł używa się wolnych KDF-ów (np. Argon2), nie samego SHA."
+        "title": "Usage",
+        "content": "SHA-2 basically consists of two hash algorithms: SHA-256 and SHA-512. The output size in bits is given by the extension to the 'SHA' name. Configurable output sizes can also be obtained using the SHAKE-128 and SHAKE-256 functions."
       }
     ],
     "argon2": [
       {
-        "title": "Mechanika działania",
-        "content": "Argon2 to funkcja skrótu zaprojektowana specjalnie do haszowania haseł, która wykorzystuje pamięć i czas jako parametry obciążenia, aby utrudnić ataki brute-force."
+        "title": "Mechanism of Action",
+        "content": "The Argon2 function uses a large, fixed-size memory region to make brute-force attacks computationally expensive. All three modes allow specification by three parameters that control: execution time, memory required, and degree of parallelism."
       },
       {
-        "title": "Historia",
-        "content": "Argon2 wygrał Password Hashing Competition w 2015 roku jako następca starszych schematów, kładąc nacisk na koszt pamięciowy i odporność na ataki sprzętowe."
+        "title": "History",
+        "content": "Argon2 is a key derivation function that was selected as the winner of the 2015 Password Hashing Competition. It was designed by Alex Biryukov, Daniel Dinu, and Dmitry Khovratovich from the University of Luxembourg."
       },
       {
-        "title": "Zastosowanie",
-        "content": "Argon2 służy do bezpiecznego haszowania haseł i KDF-ów. W praktyce dobiera się parametry pamięci, czasu i równoległości pod środowisko produkcyjne."
+        "title": "Usage",
+        "content": "RFC 9106 recommends using Argon2id if one does not know the difference between the types or if side-channel attacks are considered to be a viable threat. It serves as a memory-hard function for password hashing and proof-of-work applications."
       }
     ],
     "blake": [
       {
-        "title": "Mechanika działania",
-        "content": "BLAKE2b i BLAKE3 to nowoczesne funkcje skrótu zaprojektowane z myślą o wysokiej wydajności i dobrym bezpieczeństwie."
+        "title": "Mechanism of Action",
+        "content": "BLAKE is a cryptographic hash function based on Daniel J. Bernstein's ChaCha stream cipher, but a permuted copy of the input block, XORed with round constants, is added before each ChaCha round."
       },
       {
-        "title": "Historia",
-        "content": "BLAKE był finalistą konkursu SHA-3, a później ewoluował do BLAKE2 i BLAKE3, kładąc nacisk na szybkość i prostotę implementacji."
+        "title": "History",
+        "content": "BLAKE was a finalist in the NIST hash function competition. BLAKE2 is a cryptographic hash function based on BLAKE, created by Jean-Philippe Aumasson, Samuel Neves, Zooko Wilcox-O'Hearn, and Christian Winnerlein."
       },
       {
-        "title": "Zastosowanie",
-        "content": "BLAKE używa się do szybkich skrótów, integralności danych i systemów content-addressable. BLAKE3 jest świetny do dużych strumieni, BLAKE2b do stabilnych wdrożeń."
+        "title": "Usage",
+        "content": "The design goal was to replace the widely used, but broken, MD5 and SHA-1 algorithms in applications requiring high performance in software. BLAKE2 supports keying, salting, personalization, and hash tree modes."
       }
     ],
     "crc32": [
       {
-        "title": "Mechanika działania",
-        "content": "CRC32 to kontrolna suma obliczana szybko na podstawie wielomianu nad bitami danych. Służy do wykrywania błędów transmisji, a nie do ochrony kryptograficznej."
+        "title": "Mechanism of Action",
+        "content": "Blocks of data entering these systems get a short check value attached, based on the remainder of a polynomial division of their contents. A CRC is called an n-bit CRC when its check value is n bits long."
       },
       {
-        "title": "Historia",
-        "content": "CRC32 wywodzi się z telekomunikacji i systemów magazynowania danych jako szybki mechanizm wykrywania błędów transmisji."
+        "title": "History",
+        "content": "The use of systematic cyclic codes, which encode messages by adding a fixed-length check value, for the purpose of error detection in communication networks, was first proposed by W. Wesley Peterson in 1961."
       },
       {
-        "title": "Zastosowanie",
-        "content": "CRC32 służy do szybkiego wykrywania błędów w plikach i pakietach, ale nie zapewnia bezpieczeństwa kryptograficznego."
+        "title": "Usage",
+        "content": "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to digital data. They are not suitable for protecting against intentional alteration of data."
       }
     ],
     "md5": [
       {
-        "title": "Mechanika działania",
-        "content": "MD5 generuje krótki, szybki skrót, ale nie zapewnia odporności na kolizje w nowoczesnym sensie kryptograficznym."
+        "title": "Mechanism of Action",
+        "content": "The MD5 message-digest algorithm is a widely used hash function producing a 128-bit hash value. MD5 uses the Merkle–Damgård construction."
       },
       {
-        "title": "Historia",
-        "content": "MD5 został zaprojektowany w 1991 roku, ale później znaleziono praktyczne kolizje, co wykluczyło go z zastosowań bezpieczeństwa."
+        "title": "History",
+        "content": "MD5 was designed by Ronald Rivest in 1991 to replace an earlier hash function, MD4, and was specified in 1992 as RFC 1321."
       },
       {
-        "title": "Zastosowanie",
-        "content": "MD5 bywa używany tylko w systemach legacy lub do niekryptograficznych sum kontrolnych. Do bezpieczeństwa wybiera się SHA-2/3 lub BLAKE."
+        "title": "Usage",
+        "content": "MD5 can be used as a checksum to verify data integrity against unintentional corruption. Historically it was widely used as a cryptographic hash function; however, it has been found to suffer from extensive vulnerabilities."
       }
     ]
   }
