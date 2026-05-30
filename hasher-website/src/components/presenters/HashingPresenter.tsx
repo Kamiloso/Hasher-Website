@@ -1,3 +1,4 @@
+import { useState } from 'react'; // DODANE
 import { ActionButton, LongOutputField } from '../controls/FormControls';
 import { type TheoryBlock } from '../TheoryPanel';
 import hashingData from '../../assets/data/hashing.json';
@@ -6,6 +7,7 @@ import { createHashFormState, type HashFormState } from '../../models/cryptoForm
 import HashingView from '../views/HashingView';
 import { HASHING_VARIANT_GROUPS, findGroupForVariant } from './variantGroups';
 import { buildHashingControls } from './algorithmControls';
+import { shaAlgorithm, type ShaVariant } from '../../models/HasherSHA';
 
 type HashTheoryBlock = TheoryBlock;
 
@@ -50,14 +52,63 @@ const HashingPresenter = () => {
     }
   );
 
+  const [hashOutputText, setHashOutputText] = useState('');
+  const [isComputing, setIsComputing] = useState(false);
+
   const config = HASHING_DATA.config[hashAlgo] ?? HASHING_DATA.config[ALGORITHM_KEYS[0] ?? ''];
-  const hashOutputText = '';
 
   if (!config) {
     return null;
   }
 
   const activeGroup = findGroupForVariant(HASHING_VARIANT_GROUPS, hashAlgo);
+
+  const handleComputeHash = async () => {
+    if (!currentState.hashInputText) {
+      setHashOutputText("Wpisz dane do zahashowania.");
+      return;
+    }
+
+    setIsComputing(true);
+    setHashOutputText('');
+
+    const getStrictShaVariant = (key: string): ShaVariant => {
+      const normalized = key.toLowerCase().replace(/[^a-z0-9]/g, ''); 
+      switch (normalized) {
+        case 'sha1': return 'SHA-1';
+        case 'sha256': return 'SHA-256';
+        case 'sha384': return 'SHA-384';
+        case 'sha512': return 'SHA-512';
+        case 'sha3256': return 'SHA3-256';
+        default: return 'SHA-256'; // Bezpieczny fallback
+      }
+    };
+
+    try {
+      if (activeGroup.key === 'sha') {
+        
+        const modelVariant = getStrictShaVariant(hashAlgo);
+
+        const mode = currentState.kdf === 'pbkdf2' ? 'pbkdf2' : 'digest';
+
+        const result = await shaAlgorithm.hash(currentState.hashInputText, {
+          variant: modelVariant,
+          mode: mode,
+          salt: currentState.salt || undefined,
+          iterations: currentState.iterations || 600000 
+        });
+
+        setHashOutputText(result);
+      } else {
+        setHashOutputText(`Algorithm ${activeGroup.label} is not hooked up yet!`);
+      }
+    } catch (error: any) {
+      console.error("Hashing error:", error);
+      setHashOutputText(`Error: ${error.message}`);
+    } finally {
+      setIsComputing(false);
+    }
+  };
 
   const algorithmSelect = (
     <div className="control-group">
@@ -68,7 +119,10 @@ const HashingPresenter = () => {
             key={group.key}
             type="button"
             className={`tab-btn ${group.key === activeGroup.key ? 'active' : ''}`}
-            onClick={() => setHashAlgo(group.variants[0]?.key ?? hashAlgo)}
+            onClick={() => {
+              setHashAlgo(group.variants[0]?.key ?? hashAlgo);
+              setHashOutputText(''); 
+            }}
           >
             {group.label}
           </button>
@@ -83,7 +137,10 @@ const HashingPresenter = () => {
                 key={variant.key}
                 type="button"
                 className={`tab-btn ${variant.key === hashAlgo ? 'active' : ''}`}
-                onClick={() => setHashAlgo(variant.key)}
+                onClick={() => {
+                  setHashAlgo(variant.key);
+                  setHashOutputText(''); 
+                }}
               >
                 {variant.label}
               </button>
@@ -103,7 +160,13 @@ const HashingPresenter = () => {
 
   const actionButtons = (
     <div className="action-buttons">
-      <ActionButton variant="primary">Compute Hash</ActionButton>
+      <ActionButton 
+        variant="primary" 
+        onClick={handleComputeHash}
+        disabled={isComputing}
+      >
+        {isComputing ? 'Computing...' : 'Compute Hash'}
+      </ActionButton>
     </div>
   );
 
