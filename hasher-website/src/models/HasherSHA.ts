@@ -26,8 +26,6 @@ export interface ShaProvider {
 export class HasherSHA implements ShaProvider {
   
   async hash(plainText: string, config: ShaConfig): Promise<string> {
-    if (!plainText) return "";
-
     const { variant, mode } = config;
 
     try {

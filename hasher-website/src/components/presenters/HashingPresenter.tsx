@@ -1,4 +1,4 @@
-import { useState } from 'react'; // DODANE
+import { useState } from 'react';
 import { ActionButton, LongOutputField } from '../controls/FormControls';
 import { type TheoryBlock } from '../TheoryPanel';
 import hashingData from '../../assets/data/hashing.json';
@@ -8,6 +8,7 @@ import HashingView from '../views/HashingView';
 import { HASHING_VARIANT_GROUPS, findGroupForVariant } from './variantGroups';
 import { buildHashingControls } from './algorithmControls';
 import { shaAlgorithm, type ShaVariant } from '../../models/HasherSHA';
+import { md5Algorithm } from '../../models/HasherMD5';
 
 type HashTheoryBlock = TheoryBlock;
 
@@ -29,7 +30,7 @@ type HashingDataset = {
       };
     }
   >;
-  kdfOptions: Array<{ value: 'none' | 'pbkdf2' | 'scrypt'; label: string }>;
+  kdfOptions: Array<{ value: 'none' | 'pbkdf2' | 'scrypt' | 'hmac'; label: string }>;
   theory: Record<string, HashTheoryBlock[]>;
 };
 
@@ -80,25 +81,48 @@ const HashingPresenter = () => {
         case 'sha384': return 'SHA-384';
         case 'sha512': return 'SHA-512';
         case 'sha3256': return 'SHA3-256';
-        default: return 'SHA-256'; // Bezpieczny fallback
+        default: return 'SHA-256';
       }
     };
 
     try {
       if (activeGroup.key === 'sha') {
-        
         const modelVariant = getStrictShaVariant(hashAlgo);
-
-        const mode = currentState.kdf === 'pbkdf2' ? 'pbkdf2' : 'digest';
+        const mode = currentState.kdf === 'pbkdf2' ? 'pbkdf2' : currentState.kdf === 'hmac' ? 'hmac' : 'digest';
 
         const result = await shaAlgorithm.hash(currentState.hashInputText, {
           variant: modelVariant,
           mode: mode,
           salt: currentState.salt || undefined,
-          iterations: currentState.iterations || 600000 
+          iterations: currentState.iterations || 600000,
+          hmacKey: currentState.hmacKey
         });
 
         setHashOutputText(result);
+      } 
+      else if (activeGroup.key === 'md5') {
+        if (currentState.kdf !== 'none' && currentState.kdf !== 'hmac') {
+          throw new Error("MD5 algorithm does not support this KDF. Please set KDF to 'none' or 'hmac'.");
+        }
+
+        if (currentState.kdf === 'hmac') {
+          if (!currentState.hmacKey) {
+            throw new Error("Wprowadź tajny klucz (Secret Key) dla trybu HMAC.");
+          }
+          const result = await md5Algorithm.hash(currentState.hashInputText, {
+            mode: 'hmac',
+            hmacKey: currentState.hmacKey
+          });
+          setHashOutputText(result);
+        } 
+        // Digest tribe
+        else {
+          const result = await md5Algorithm.hash(currentState.hashInputText, {
+            mode: 'digest',
+            salt: currentState.salt || undefined
+          });
+          setHashOutputText(result);
+        }
       } else {
         setHashOutputText(`Algorithm ${activeGroup.label} is not hooked up yet!`);
       }
@@ -122,6 +146,13 @@ const HashingPresenter = () => {
             onClick={() => {
               setHashAlgo(group.variants[0]?.key ?? hashAlgo);
               setHashOutputText(''); 
+              
+              if (group.key === 'md5' && currentState.kdf !== 'none' && currentState.kdf !== 'hmac') {
+                updateCurrentState((prevState) => ({ 
+                  ...prevState, 
+                  kdf: 'none' 
+                }));
+              }
             }}
           >
             {group.label}
@@ -151,10 +182,17 @@ const HashingPresenter = () => {
     </div>
   );
 
+  const availableKdfOptions = KDF_OPTIONS.filter((option) => {
+    if (activeGroup.key === 'md5') {
+      return option.value === 'none' || option.value === 'hmac';
+    }
+    return true; 
+  });
+
   const { kdfControl, iterationsControl, argon2Controls, inputControl, saltControl } = buildHashingControls({
     config,
     currentState,
-    kdfOptions: KDF_OPTIONS,
+    kdfOptions: availableKdfOptions,
     updateCurrentState
   });
 

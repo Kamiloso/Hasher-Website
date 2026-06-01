@@ -34,7 +34,8 @@
     "md5": { "label": "MD5", "saltPolicy": "optional", "saltLabel": "Salt (optional)", "defaultSalt": "", "defaultKdf": "none", "allowKdf": true }
   },
   "kdfOptions": [
-    { "value": "none", "label": "No KDF" },
+    { "value": "none", "label": "No KDF (Classic Digest)" },
+    { "value": "hmac", "label": "HMAC" },
     { "value": "pbkdf2", "label": "PBKDF2" },
     { "value": "scrypt", "label": "scrypt" }
   ],
