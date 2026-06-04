@@ -1,5 +1,6 @@
 import { getBytes, bufferToHex, concatBytes } from '../utils/cryptoUtils';
-import { sha3_256 } from 'js-sha3';
+import sha3 from 'js-sha3';
+const { sha3_256 } = sha3;
 
 export type ShaVariant = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512' | 'SHA3-256';
 export type ShaOperationMode = 'digest' | 'hmac' | 'pbkdf2';
@@ -7,14 +8,14 @@ export type ShaOperationMode = 'digest' | 'hmac' | 'pbkdf2';
 export interface ShaConfig {
   variant: ShaVariant;
   mode: ShaOperationMode;
-  
+
   // Optional but required by 'pbkdf2'
   // Can be used for 'digest' to add extra security
   salt?: string;
-  
+
   // Required for 'hmac' to provide the secret key for signing
   hmacKey?: string;
-  
+
   // Number of iterations used only for 'pbkdf2'
   iterations?: number;
 }
@@ -24,7 +25,7 @@ export interface ShaProvider {
 }
 
 export class HasherSHA implements ShaProvider {
-  
+
   async hash(plainText: string, config: ShaConfig): Promise<string> {
     const { variant, mode } = config;
 
@@ -43,17 +44,17 @@ export class HasherSHA implements ShaProvider {
         const dataBytes = getBytes(plainText);
 
         const cryptoKey = await window.crypto.subtle.importKey(
-          "raw",
-          keyBytes as unknown as BufferSource,
-          { name: "HMAC", hash: variant },
-          false,
-          ["sign"]
+            "raw",
+            keyBytes as unknown as BufferSource,
+            { name: "HMAC", hash: variant },
+            false,
+            ["sign"]
         );
 
         const signatureBuffer = await window.crypto.subtle.sign(
-          "HMAC",
-          cryptoKey,
-          dataBytes as unknown as BufferSource
+            "HMAC",
+            cryptoKey,
+            dataBytes as unknown as BufferSource
         );
 
         return bufferToHex(signatureBuffer as ArrayBuffer);
@@ -78,11 +79,11 @@ export class HasherSHA implements ShaProvider {
         }
 
         const keyMaterial = await window.crypto.subtle.importKey(
-          "raw",
-          passwordBytes as unknown as BufferSource,
-          { name: "PBKDF2" },
-          false,
-          ["deriveBits"]
+            "raw",
+            passwordBytes as unknown as BufferSource,
+            { name: "PBKDF2" },
+            false,
+            ["deriveBits"]
         );
 
         let hashLengthBits = 256;
@@ -91,14 +92,14 @@ export class HasherSHA implements ShaProvider {
         if (variant === 'SHA-512') hashLengthBits = 512;
 
         const derivedBits = await window.crypto.subtle.deriveBits(
-          {
-            name: "PBKDF2",
-            salt: saltBytes as unknown as BufferSource,
-            iterations: iterations,
-            hash: variant
-          },
-          keyMaterial,
-          hashLengthBits
+            {
+              name: "PBKDF2",
+              salt: saltBytes as unknown as BufferSource,
+              iterations: iterations,
+              hash: variant
+            },
+            keyMaterial,
+            hashLengthBits
         );
 
         return bufferToHex(derivedBits as ArrayBuffer);
@@ -109,19 +110,19 @@ export class HasherSHA implements ShaProvider {
       // ====================================================================
       if (mode === 'digest') {
         let dataToHash = getBytes(plainText);
-        
+
         if (config.salt) {
           const saltBytes = getBytes(config.salt);
           dataToHash = concatBytes(saltBytes, dataToHash);
         }
 
         if (variant === 'SHA3-256') {
-          return sha3_256(dataToHash); 
+          return sha3_256(dataToHash);
         }
 
         const hashBuffer = await window.crypto.subtle.digest(
-          variant,
-          dataToHash as unknown as BufferSource
+            variant,
+            dataToHash as unknown as BufferSource
         );
 
         return bufferToHex(hashBuffer as ArrayBuffer);
