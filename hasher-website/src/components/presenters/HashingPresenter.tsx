@@ -66,10 +66,7 @@ const HashingPresenter = () => {
   const activeGroup = findGroupForVariant(HASHING_VARIANT_GROUPS, hashAlgo);
 
   const handleComputeHash = async () => {
-    if (!currentState.hashInputText) {
-      setHashOutputText("Wpisz dane do zahashowania.");
-      return;
-    }
+    
 
     setIsComputing(true);
     setHashOutputText('');
