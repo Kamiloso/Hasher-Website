@@ -70,10 +70,6 @@ export class HasherSHA implements ShaProvider {
         const saltBytes = getBytes(config.salt);
         const iterations = config.iterations || 600000; // Secure minimun by OWASP
 
-        if (iterations < 600000) {
-          throw new Error("PBKDF2 iterations should be at least 600,000 for security reasons.");
-        }
-
         if (variant === 'SHA3-256') {
           throw new Error("PBKDF2 does not support SHA3-256 variant.");
         }
