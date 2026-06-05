@@ -45,7 +45,7 @@ export class HasherMD5 implements Md5Provider {
           dataToHash = concatBytes(saltBytes, plainTextBytes);
         }
 
-        return md5(dataToHash);
+        return (md5 as any)(dataToHash);
       }
 
       throw new Error(`Unsupported operation mode: ${mode}`);
