@@ -1,4 +1,12 @@
-type KeySizeOption = {
+import type { TheoryBlock } from '../../TheoryPanel';
+
+// TODO: Remove config, add data to ts file
+import encryptionData from './encryption.json';
+
+export const ENCRYPTION_DATA =
+  encryptionData as unknown as EncryptionDataset;
+
+  type KeySizeOption = {
   value: number;
   label: string;
 };
@@ -10,6 +18,44 @@ export type VariantGroup = {
   keySizeLabel?: string;
   keySizeOptions?: KeySizeOption[];
   keySizeDefault?: number;
+};
+
+
+export type EncryptionDataset = {
+  algorithmOptions: Array<{ value: string; label: string }>;
+  theory: Record<string, TheoryBlock[]>;
+} & Record<string, EncryptionConfigShape>;
+
+export type EncryptionConfigShape = {
+  label: string;
+  mode: 'symmetric' | 'asymmetric' | 'stream';
+  keyInputType: 'byte' | 'text';
+  keyLabel: string;
+  keyPlaceholder: string;
+  keyTextPlaceholder?: string;
+  keyByteField: {
+    label: string;
+    byteLength: number;
+    columns: number;
+  };
+  byteFields: Array<{
+    key: string;
+    label: string;
+    byteLength: number;
+    columns?: number;
+    placeholder?: string;
+  }>;
+  generateAction?: {
+    label: string;
+    fields: string[];
+    outputKind: 'bytes' | 'text';
+  };
+  showSalt: boolean;
+  saltLabel: string;
+  saltPlaceholder: string;
+  showCounter: boolean;
+  counterLabel?: string;
+  counterPlaceholder?: string;
 };
 
 export const ENCRYPTION_VARIANT_GROUPS: VariantGroup[] = [
@@ -62,46 +108,6 @@ export const ENCRYPTION_VARIANT_GROUPS: VariantGroup[] = [
   }
 ];
 
-export const HASHING_VARIANT_GROUPS: VariantGroup[] = [
-  {
-    key: 'sha',
-    label: 'SHA',
-    variants: [
-      { key: 'sha256', label: 'SHA-256' },
-      { key: 'sha512', label: 'SHA-512' },
-      { key: 'sha3_256', label: 'SHA3-256' },
-      { key: 'sha1', label: 'SHA-1' }
-    ]
-  },
-  {
-    key: 'argon2',
-    label: 'Argon2',
-    variants: [{ key: 'argon2', label: '' }]
-  },
-  {
-    key: 'md5',
-    label: 'MD5',
-    variants: [{ key: 'md5', label: '' }]
-  },
-  {
-    key: 'blake',
-    label: 'BLAKE',
-    variants: [
-      { key: 'blake2b', label: 'BLAKE2b' },
-      { key: 'blake3', label: 'BLAKE3' }
-    ]
-  },
-  {
-    key: 'crc32',
-    label: 'CRC32',
-    variants: [{ key: 'crc32', label: '' }]
-  }
-];
-
 export const findGroupForVariant = (groups: VariantGroup[], variantKey: string) => {
   return groups.find((group) => group.variants.some((variant) => variant.key === variantKey)) ?? groups[0];
-};
-
-export const findVariantLabel = (groups: VariantGroup[], variantKey: string) => {
-  return groups.flatMap((group) => group.variants).find((variant) => variant.key === variantKey)?.label ?? variantKey;
 };

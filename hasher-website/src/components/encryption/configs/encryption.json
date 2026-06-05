@@ -1,45 +1,15 @@
 {
   "algorithmOptions": [
-    {
-      "value": "aes_gcm",
-      "label": "AES-256 (GCM)"
-    },
-    {
-      "value": "aes_cbc",
-      "label": "AES-256 (CBC)"
-    },
-    {
-      "value": "aes_ctr",
-      "label": "AES-256 (CTR)"
-    },
-    {
-      "value": "chacha20",
-      "label": "ChaCha20"
-    },
-    {
-      "value": "chacha20_poly1305",
-      "label": "ChaCha20-Poly1305"
-    },
-    {
-      "value": "rsa_oaep",
-      "label": "RSA-2048 (OAEP)"
-    },
-    {
-      "value": "rsa_pss",
-      "label": "RSA-2048 (PSS)"
-    },
-    {
-      "value": "ecc_p256",
-      "label": "ECC (secp256r1)"
-    },
-    {
-      "value": "ecc_p384",
-      "label": "ECC (secp384r1)"
-    },
-    {
-      "value": "blowfish",
-      "label": "Blowfish"
-    }
+    { "value": "aes_gcm", "label": "AES-256 (GCM)" },
+    { "value": "aes_cbc", "label": "AES-256 (CBC)" },
+    { "value": "aes_ctr", "label": "AES-256 (CTR)" },
+    { "value": "chacha20", "label": "ChaCha20" },
+    { "value": "chacha20_poly1305", "label": "ChaCha20-Poly1305" },
+    { "value": "rsa_oaep", "label": "RSA-2048 (OAEP)" },
+    { "value": "rsa_pss", "label": "RSA-2048 (PSS)" },
+    { "value": "ecc_p256", "label": "ECC (secp256r1)" },
+    { "value": "ecc_p384", "label": "ECC (secp384r1)" },
+    { "value": "blowfish", "label": "Blowfish" }
   ],
   "aes_gcm": {
     "label": "AES-256 (GCM Mode)",
@@ -136,7 +106,7 @@
     "showSalt": false,
     "showCounter": true
   },
-  "chacha": {
+  "chacha20": {
     "label": "ChaCha20",
     "mode": "stream",
     "keyInputType": "byte",

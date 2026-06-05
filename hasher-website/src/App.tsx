@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import './App.css';
+import { useEffect, useState } from 'react';
 import Navigation, { type TabType } from './components/Navigation';
-import EncryptionPresenter from './components/presenters/EncryptionPresenter';
-import HashingPresenter from './components/presenters/HashingPresenter';
+import EncryptionPresenter from './components/encryption/EncryptionPresenter';
+import HashingPresenter from './components/hashing/HashingPresenter';
 
 const getInitialTheme = () => {
   const storedTheme = window.localStorage.getItem('theme');

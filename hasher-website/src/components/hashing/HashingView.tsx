@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
 import TheoryPanel, { type TheoryBlock } from '../TheoryPanel';
+
+import type { ReactNode } from 'react';
 
 type HashingViewProps = {
   title: string;

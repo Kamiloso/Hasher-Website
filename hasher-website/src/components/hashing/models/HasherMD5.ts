@@ -1,4 +1,4 @@
-import { getBytes, concatBytes } from '../utils/cryptoUtils';
+import { getBytes, concatBytes } from '../../../scripts/cryptoUtils';
 import md5 from 'js-md5';
 
 export type Md5OperationMode = 'digest' | 'hmac';

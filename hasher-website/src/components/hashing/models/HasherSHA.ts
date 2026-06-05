@@ -1,4 +1,4 @@
-import { getBytes, bufferToHex, concatBytes } from '../utils/cryptoUtils';
+import { getBytes, bufferToHex, concatBytes } from '../../../scripts/cryptoUtils';
 import sha3 from 'js-sha3';
 const { sha3_256 } = sha3;
 
