@@ -9,6 +9,7 @@ import { HASHING_VARIANT_GROUPS, findGroupForVariant } from './variantGroups';
 import { buildHashingControls } from './algorithmControls';
 import { shaAlgorithm, type ShaVariant } from '../../models/HasherSHA';
 import { md5Algorithm } from '../../models/HasherMD5';
+import { crcAlgorithm } from '../../models/HasherCRC';
 
 type HashTheoryBlock = TheoryBlock;
 
@@ -123,7 +124,20 @@ const HashingPresenter = () => {
           });
           setHashOutputText(result);
         }
-      } else {
+      
+      }
+      else if(activeGroup.key === 'crc32'){
+        if (currentState.kdf !== 'none') {
+          throw new Error("Algorytm CRC32 nie obsługuje funkcji KDF. Ustaw KDF na 'none'.");
+        }
+
+        const result = await crcAlgorithm.hash(currentState.hashInputText, {
+          mode: 'digest'
+        });
+    
+        setHashOutputText(result);
+      }
+      else {
         setHashOutputText(`Algorithm ${activeGroup.label} is not hooked up yet!`);
       }
     } catch (error: any) {
