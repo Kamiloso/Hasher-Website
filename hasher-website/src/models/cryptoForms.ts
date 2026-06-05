@@ -12,7 +12,7 @@ export type EncryptionFormState = {
 export type HashFormState = {
   hashInputText: string;
   salt: string;
-  kdf: 'none' | 'hmac' | 'pbkdf2' | 'scrypt' | 'argon2';
+  kdf: 'none' | 'hmac' | 'pbkdf2' | 'argon2';
   hmacKey?: string;
   iterations: number;
   argon2MemoryKb: number;

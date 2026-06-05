@@ -22,7 +22,7 @@ type HashingDataset = {
       saltPolicy: 'optional' | 'recommended' | 'none';
       saltLabel: string;
       defaultSalt: string;
-      defaultKdf: 'none' | 'pbkdf2' | 'scrypt';
+      defaultKdf: 'none' | 'pbkdf2';
       allowKdf: boolean;
       argon2Params?: {
         defaultMemoryKb: number;
@@ -31,7 +31,7 @@ type HashingDataset = {
       };
     }
   >;
-  kdfOptions: Array<{ value: 'none' | 'pbkdf2' | 'scrypt' | 'hmac'; label: string }>;
+  kdfOptions: Array<{ value: 'none' | 'pbkdf2' | 'hmac'; label: string }>;
   theory: Record<string, HashTheoryBlock[]>;
 };
 
