@@ -25,3 +25,15 @@ dist-ssr
 
 # node modules
 node_modules/
+
+
+#Latex garbage
+documentation/*.aux
+documentation/*.log
+documentation/*.toc
+documentation/*.synctex.gz
+documentation/*.blg
+documentation/*.bbl
+documentation/*.out
+documentation/*.fdb_latexmk
+documentation/*.fls
