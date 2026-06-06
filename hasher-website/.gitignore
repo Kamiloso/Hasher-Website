@@ -37,3 +37,4 @@ documentation/*.bbl
 documentation/*.out
 documentation/*.fdb_latexmk
 documentation/*.fls
+documentation/*.pdf
