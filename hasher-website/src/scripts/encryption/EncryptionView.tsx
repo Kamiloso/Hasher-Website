@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import TheoryPanel, { type TheoryBlock } from '../TheoryPanel';
+import TheoryPanel, { type TheoryBlock } from '../../components/TheoryPanel';
 
 type EncryptionViewProps = {
   title: string;

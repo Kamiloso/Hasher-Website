@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import ByteField from '../ByteField.tsx';
-import { LongTextField } from '../FormControls.tsx';
+import ByteField from '../../components/ByteField.tsx';
+import { LongTextField } from '../../components/FormControls.tsx';
 import type { EncryptionFormState } from './models/cryptoForms.ts';
 
 export type EncryptionConfig = {

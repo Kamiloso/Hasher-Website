@@ -13,6 +13,7 @@ export const useHashingState = () => {
       return createHashFormState({
         defaultSalt: config?.defaultSalt ?? '',
         defaultKdf: config?.defaultKdf ?? 'none',
+        defaultHmacKey: config?.defaultHmacKey ?? '',
         defaultArgon2MemoryKb: config?.argon2Params?.defaultMemoryKb,
         defaultArgon2Parallelism: config?.argon2Params?.defaultParallelism,
         defaultArgon2TimeCost: config?.argon2Params?.defaultTimeCost

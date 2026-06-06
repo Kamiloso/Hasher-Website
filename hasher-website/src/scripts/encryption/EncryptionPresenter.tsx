@@ -1,4 +1,4 @@
-import { ActionButton, LongOutputField } from '../FormControls';
+import { ActionButton, LongOutputField } from '../../components/FormControls';
 import EncryptionView from './EncryptionView';
 
 import { ENCRYPTION_DATA } from './configs/encryptionConstants';

@@ -1,4 +1,4 @@
-import type { TheoryBlock } from '../../TheoryPanel';
+import { type TheoryBlock } from '../../../components/TheoryPanel';
 
 // TODO: Remove config, add data to ts file
 import encryptionData from './encryption.json';

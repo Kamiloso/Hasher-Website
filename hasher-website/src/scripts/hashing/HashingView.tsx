@@ -1,4 +1,4 @@
-import TheoryPanel, { type TheoryBlock } from '../TheoryPanel';
+import TheoryPanel, { type TheoryBlock } from '../../components/TheoryPanel';
 
 import type { ReactNode } from 'react';
 
@@ -8,6 +8,7 @@ type HashingViewProps = {
   kdfControl: ReactNode | null;
   iterationsControl: ReactNode | null;
   argon2Controls: ReactNode | null;
+  hmacKeyControl: ReactNode | null;
   inputControl: ReactNode;
   saltControl: ReactNode | null;
   actionButtons: ReactNode;
@@ -21,6 +22,7 @@ const HashingView = ({
   kdfControl,
   iterationsControl,
   argon2Controls,
+  hmacKeyControl,
   inputControl,
   saltControl,
   actionButtons,
@@ -35,6 +37,7 @@ const HashingView = ({
         {kdfControl}
         {iterationsControl}
         {argon2Controls}
+        {hmacKeyControl}
         {inputControl}
         {saltControl}
         {actionButtons}

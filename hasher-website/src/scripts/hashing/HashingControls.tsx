@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { LongTextField, ShortTextField } from '../FormControls';
+import { LongTextField, ShortTextField } from '../../components/FormControls';
 import type { HashFormState } from './models/cryptoForms';
 
 export type Argon2ParamConfig = {
@@ -28,6 +28,7 @@ export type HashingControls = {
   argon2Controls: ReactNode | null;
   inputControl: ReactNode;
   saltControl: ReactNode | null;
+  hmacKeyControl: ReactNode | null;
 };
 
 export const buildHashingControls = ({
@@ -38,6 +39,7 @@ export const buildHashingControls = ({
 }: HashingControlContext): HashingControls => {
   const showSalt = config.saltPolicy !== 'none';
   const showKdf = config.allowKdf;
+  const showHmacKey = currentState.kdf === 'hmac';
   const effectiveKdf = currentState.kdf;
 
   const kdfControl = showKdf ? (
@@ -131,11 +133,21 @@ export const buildHashingControls = ({
     />
   ) : null;
 
+  const hmacKeyControl = showHmacKey ? (
+    <ShortTextField
+      label="HMAC Key"
+      value={currentState.hmacKey}
+      onChange={(nextValue) => updateCurrentState((state) => ({ ...state, hmacKey: nextValue }))}
+      placeholder="Enter HMAC key..."
+    />
+  ) : null;
+
   return {
     kdfControl,
     iterationsControl,
     argon2Controls,
     inputControl,
-    saltControl
+    saltControl,
+    hmacKeyControl
   };
 };

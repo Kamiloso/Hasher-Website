@@ -1,10 +1,9 @@
 import HashingView from './HashingView.tsx';
 import HashAlgorithmSelector from './HashAlgorithmSelector.tsx';
 
-import { ActionButton, LongOutputField } from '../FormControls.tsx';
+import { ActionButton, LongOutputField } from '../../components/FormControls';
 import { useHashingState } from './hooks/useHashingState';
 import { useHashComputation } from './hooks/useHashComputation.ts';
-import { getAvailableKdfOptions } from './services/hashingRules';
 import { buildHashingControls } from './HashingControls.tsx';
 
 import {
@@ -37,11 +36,6 @@ const HashingPresenter = () => {
 
   const activeGroup = findGroupForVariant(hashAlgo);
 
-  const availableKdfOptions = getAvailableKdfOptions(
-    activeGroup.id,
-    KDF_OPTIONS
-  );
-
   const handleSetOutput = (val: string) => {
     updateCurrentState(s => ({ ...s, output: val }));
   };
@@ -51,11 +45,12 @@ const HashingPresenter = () => {
     iterationsControl,
     argon2Controls,
     inputControl,
-    saltControl
+    saltControl,
+    hmacKeyControl
   } = buildHashingControls({
     config,
     currentState,
-    kdfOptions: availableKdfOptions,
+    kdfOptions: KDF_OPTIONS,
     updateCurrentState
   });
 
@@ -108,6 +103,7 @@ const HashingPresenter = () => {
       kdfControl={kdfControl}
       iterationsControl={iterationsControl}
       argon2Controls={argon2Controls}
+      hmacKeyControl={hmacKeyControl}
       inputControl={inputControl}
       saltControl={saltControl}
       actionButtons={actionButtons}

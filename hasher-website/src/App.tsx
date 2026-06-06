@@ -1,8 +1,8 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import Navigation, { type TabType } from './components/Navigation';
-import EncryptionPresenter from './components/encryption/EncryptionPresenter';
-import HashingPresenter from './components/hashing/HashingPresenter';
+import EncryptionPresenter from './scripts/encryption/EncryptionPresenter';
+import HashingPresenter from './scripts/hashing/HashingPresenter';
 
 const getInitialTheme = () => {
   const storedTheme = window.localStorage.getItem('theme');
@@ -46,7 +46,7 @@ function App() {
             <span className="theme-toggle__icon" aria-hidden="true">
               {theme === 'dark' ? '◐' : '◑'}
             </span>
-            <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+            <span>{theme === 'dark' ? 'Dark mode' : 'Light mode'}</span>
           </button>
         </div>
         <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />

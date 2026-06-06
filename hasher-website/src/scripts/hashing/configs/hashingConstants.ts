@@ -1,4 +1,4 @@
-import { type TheoryBlock } from '../../TheoryPanel';
+import { type TheoryBlock } from '../../../components/TheoryPanel';
 
 export type KdfType = 'none' | 'pbkdf2' | 'hmac';
 export type SaltPolicy = 'optional' | 'recommended' | 'none';
@@ -18,6 +18,7 @@ export interface HashAlgorithmVariant {
   defaultKdf: KdfType;
   allowKdf: boolean;
   argon2Params?: Argon2Params;
+  defaultHmacKey?: string;
 }
 
 export interface HashAlgorithmGroup {
