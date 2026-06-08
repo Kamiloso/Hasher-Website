@@ -47,12 +47,9 @@ export const executeHash = async (
     }
 
     if (state.kdf === 'hmac') {
-      if (!state.hmacKey) {
-        throw new Error('Wprowadź tajny klucz (Secret Key) dla trybu HMAC.');
-      }
       return md5Algorithm.hash(state.hashInputText, {
         mode: 'hmac',
-        hmacKey: state.hmacKey
+        hmacKey: state.hmacKey || ''
       });
     }
 

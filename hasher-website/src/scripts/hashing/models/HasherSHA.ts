@@ -56,7 +56,7 @@ export class HasherSHA implements ShaProvider {
       // 1. HMAC
       // ====================================================================
       if (mode === 'hmac') {
-        if (!config.hmacKey) throw new Error("HMAC mode requires secret key (hmacKey).");
+        if (!config.hmacKey) config.hmacKey = '';
 
         if (variant === 'SHA3-256') {
           const keyBytes = getBytes(config.hmacKey);

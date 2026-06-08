@@ -30,7 +30,7 @@ export class HasherMD5 implements Md5Provider {
       // ====================================================================
       if (mode === 'hmac') {
         if (!config.hmacKey) {
-          throw new Error("HMAC mode requires secret key (hmacKey).");
+          config.hmacKey = '';
         }
 
         return (md5 as any).hmac(config.hmacKey, plainText);
