@@ -1,7 +1,7 @@
 import { ActionButton, LongOutputField } from '../../components/FormControls';
 import EncryptionView from './EncryptionView';
 
-import { ENCRYPTION_DATA } from './configs/encryptionConstants';
+import { getConfigForVariant } from './configs/encryptionConstants';
 import { useEncryptionState } from './hooks/useEncryptionState';
 import { useEncryptionActions } from './hooks/useEncryptionAction';
 import { useEncryptionHandlers } from './hooks/useEncryptionHandlers';
@@ -9,10 +9,8 @@ import { resolveEncryptionMeta } from './services/encryptionKeyResolver';
 import { parseStateKey } from './services/encryptionStateKey';
 import { EncryptionAlgorithmSelector } from './EncryptionAlgorithmSelector';
 
-import {
-    buildEncryptionByteFields,
-    buildEncryptionKeyControls
-} from './EncryptionControls';
+import { buildEncryptionControls } from './EncryptionControls';
+import { executeEncryption } from './services/encryptionExecutor';
 
 const EncryptionPresenter = () => {
   const {
@@ -26,18 +24,16 @@ const EncryptionPresenter = () => {
   } = useEncryptionState();
 
   const { compute, isComputing } = useEncryptionActions();
-
   const { variantKey } = parseStateKey(activeKey ?? '');
 
-  const config = ENCRYPTION_DATA[variantKey];
-  if (!config) {
+  const configContext = getConfigForVariant(variantKey);
+  if (!configContext) {
     return null;
   }
 
   const meta = resolveEncryptionMeta(
     activeKey,
-    keySizeByGroup,
-    config
+    keySizeByGroup
   );
 
   const {
@@ -46,12 +42,18 @@ const EncryptionPresenter = () => {
     updateKeyText,
     updateByteField,
     handleGenerate
-  } = useEncryptionHandlers({ config, mode, meta, updateCurrentState });
+  } = useEncryptionHandlers({ configContext, mode, meta, updateCurrentState });
 
-  const keyControls = buildEncryptionKeyControls({
+  const {
+    keyControls,
+    byteFields,
+    mainInput,
+    saltControl,
+    counterControl
+  } = buildEncryptionControls({
     mode,
     algo: activeKey,
-    config,
+    configContext,
     currentState,
     effectiveKeyByteLength: meta.effectiveKeyByteLength,
     symmetricKeyId: meta.symmetricKeyId,
@@ -59,21 +61,12 @@ const EncryptionPresenter = () => {
     publicKeyId: meta.publicKeyId,
     privateKeyId: meta.privateKeyId,
     updateKeyBytes,
-    updateKeyText
+    updateKeyText,
+    updateByteField,
+    updateCurrentState
   });
 
-  const byteFields = buildEncryptionByteFields({
-    mode,
-    algo: activeKey,
-    config,
-    currentState,
-    updateByteField
-  });
-
-  const theoryBlocks =
-    ENCRYPTION_DATA.theory?.[meta.variantKey] ??
-    ENCRYPTION_DATA.theory?.[meta.activeGroup?.key] ??
-    [];
+  const theoryBlocks = configContext.group.theory;
 
   return (
     <EncryptionView
@@ -89,26 +82,42 @@ const EncryptionPresenter = () => {
         />
       }
       keySelectionControl={null}
-      mainInput={null}
+      mainInput={mainInput}
       generateAction={
-        config.generateAction ? (
+        configContext.activeGenerateAction && (
+          mode === 'encrypt' ||
+          configContext.group.mode === 'asymmetric'
+        ) ? (
           <div className="control-group">
             <ActionButton variant="primary" onClick={handleGenerate}>
-              {config.generateAction.label}
+              {configContext.activeGenerateAction.label}
             </ActionButton>
           </div>
         ) : null
       }
       keyControls={keyControls}
       byteFields={byteFields}
-      counterControl={null}
-      saltControl={null}
+      counterControl={counterControl}
+      saltControl={saltControl}
       actionButtons={
         <div className="action-buttons">
           <ActionButton 
             variant="primary" 
             onClick={() => {
-              compute({ executor: async () => 'Wynik szyfrowania / deszyfrowania...' }, handleSetOutput);
+              compute(
+              {
+                executor: async () =>
+                  executeEncryption(
+                    meta.activeGroup.key,  // ex. "aes", "rsa", "chacha"
+                    meta.variantKey,       // ex. "aes-gcm"
+                    {
+                      ...currentState,
+                      mode
+                    }
+                  )
+                },
+                handleSetOutput
+              );
             }}
             disabled={isComputing}
           >

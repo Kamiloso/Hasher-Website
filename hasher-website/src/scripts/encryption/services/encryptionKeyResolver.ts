@@ -1,19 +1,21 @@
-import { ENCRYPTION_VARIANT_GROUPS } from '../configs/encryptionConstants';
+import { getConfigForVariant } from '../configs/encryptionConstants';
 import { parseStateKey } from './encryptionStateKey';
 
 export const resolveEncryptionMeta = (
   stateKey: string,
-  keySizeByGroup: Record<string, number>,
-  config: any
+  keySizeByGroup: Record<string, number>
 ) => {
-  const { variantKey, keySize: parsedKeySize } =
-    parseStateKey(stateKey);
+  const { variantKey, keySize: parsedKeySize } = parseStateKey(stateKey);
 
-  const activeGroup = ENCRYPTION_VARIANT_GROUPS.find((g) =>
-    g.variants.some((v) => v.key === variantKey)
-  ) ?? ENCRYPTION_VARIANT_GROUPS[0];
+  const configContext = getConfigForVariant(variantKey);
 
-  const activeKeySize = activeGroup.keySizeOptions
+  if (!configContext) {
+    throw new Error(`Variant not found for key: ${variantKey}`);
+  }
+
+  const { group: activeGroup, activeKeyField } = configContext;
+
+  const activeKeySize = activeGroup.keySizeOptions?.length
     ? (parsedKeySize ??
         keySizeByGroup[activeGroup.key] ??
         activeGroup.keySizeDefault ??
@@ -21,10 +23,9 @@ export const resolveEncryptionMeta = (
         0)
     : 0;
 
-  const effectiveKeyByteLength =
-    activeGroup.keySizeOptions?.length
-      ? activeKeySize
-      : config.keyByteField?.byteLength ?? 0;
+  const effectiveKeyByteLength = activeGroup.keySizeOptions?.length
+    ? activeKeySize
+    : activeKeyField?.byteLength ?? 0;
 
   const symmetricKeyId = activeGroup.keySizeOptions?.length
     ? `symmetric_${activeKeySize}`
@@ -38,9 +39,10 @@ export const resolveEncryptionMeta = (
     ? `privateKey_${activeKeySize}`
     : 'privateKey';
 
+  const unit = activeGroup.mode === 'asymmetric' ? 'bits' : 'bytes';
   const symmetricKeyLabel = activeGroup.keySizeOptions?.length
-    ? `${config.keyLabel} (${activeKeySize} bytes)`
-    : config.keyLabel;
+    ? `${activeGroup.keyLabel} (${activeKeySize} ${unit})`
+    : activeGroup.keyLabel;
 
   return {
     variantKey,

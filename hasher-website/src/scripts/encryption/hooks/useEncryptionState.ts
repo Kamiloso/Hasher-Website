@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAlgorithmStateStore } from '../../../scripts/hooks/useAlgorithmStateStore';
-import { ENCRYPTION_STATE_KEYS } from '../services/encryptionStateKey';
-import { ENCRYPTION_DATA } from '../configs/encryptionConstants';
+import { ENCRYPTION_STATE_KEYS, parseStateKey } from '../services/encryptionStateKey';
+import { getConfigForVariant } from '../configs/encryptionConstants';
 
 import {
   createEncryptionFormState,
@@ -16,22 +16,21 @@ export const useEncryptionState = () => {
 
   const store = useAlgorithmStateStore<EncryptionFormState>(
     ENCRYPTION_STATE_KEYS,
-    (key) => {
+    (stateKey) => {
       const base = createEncryptionFormState();
-      const { variantKey } = key.includes('::')
-        ? { variantKey: key.split('::')[0] }
-        : { variantKey: key };
+      const { variantKey } = parseStateKey(stateKey);
 
-      const config = (ENCRYPTION_DATA as any)[variantKey];
-
-      if (!config) return base;
+      const configContext = getConfigForVariant(variantKey);
+      if (!configContext) return base;
 
       const byteValues: Record<string, string[]> = {
         ...(base.byteValues ?? {})
       };
 
-      (config.byteFields ?? []).forEach((f: any) => {
-        byteValues[f.key] ??= [];
+      configContext.variant.byteFields.forEach((field) => {
+        if (field.key) {
+          byteValues[field.key] ??= [];
+        }
       });
 
       const keyBytes = { ...(base.keyBytes ?? {}) };

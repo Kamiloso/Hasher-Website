@@ -1,4 +1,4 @@
-import { ENCRYPTION_VARIANT_GROUPS } from '../configs/encryptionConstants';
+import { ENCRYPTION_REGISTRY } from '../configs/encryptionConstants';
 
 export const buildStateKey = (variantKey: string, keySize?: number) =>
   keySize ? `${variantKey}::${keySize}` : variantKey;
@@ -13,7 +13,7 @@ export const parseStateKey = (stateKey: string) => {
 };
 
 export const ENCRYPTION_STATE_KEYS =
-  ENCRYPTION_VARIANT_GROUPS.flatMap((group) =>
+  ENCRYPTION_REGISTRY.flatMap((group) =>
     group.variants.flatMap((variant) =>
       group.keySizeOptions?.length
         ? group.keySizeOptions.map((option) =>

@@ -81,6 +81,7 @@ export const buildHashingControls = ({
           id="argon2-memory"
           type="number"
           min={8}
+          max={128 * 1024 * 1024} // 128 GB (I hope no one will set this that high in a browser...)
           step={8}
           value={currentState.argon2MemoryKb}
           onChange={(event) => updateCurrentState((state) => ({ ...state, argon2MemoryKb: Number(event.target.value) || (config.argon2Params?.defaultMemoryKb ?? 65536) }))}

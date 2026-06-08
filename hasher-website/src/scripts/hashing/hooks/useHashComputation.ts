@@ -21,9 +21,11 @@ export const useHashComputation = () => {
       );
 
       setOutput(result);
-    } catch(error: any) {
-      console.error(error);
-      setOutput(`Error: ${error.message}`);
+
+    } catch(e: any) {
+      setOutput(`Error: ${e.message}`);
+      window.alert(`An error occurred: ${e.message}`);
+
     } finally {
       setComputing(false);
     }

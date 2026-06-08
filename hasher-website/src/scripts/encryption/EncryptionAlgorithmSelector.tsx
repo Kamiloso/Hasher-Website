@@ -1,5 +1,14 @@
-import { ENCRYPTION_VARIANT_GROUPS } from './configs/encryptionConstants';
+import { ENCRYPTION_REGISTRY, type AlgorithmGroup } from './configs/encryptionConstants';
 import { buildStateKey } from './services/encryptionStateKey';
+
+interface EncryptionAlgorithmSelectorProps {
+  activeGroup: AlgorithmGroup | undefined;
+  algo: string; // Odpowiada za variantKey
+  activeKeySize: number;
+  setStateKey: (key: string) => void;
+  setMode: (mode: 'encrypt' | 'decrypt') => void;
+  mode: 'encrypt' | 'decrypt';
+}
 
 export const EncryptionAlgorithmSelector = ({
   activeGroup,
@@ -8,13 +17,13 @@ export const EncryptionAlgorithmSelector = ({
   setStateKey,
   setMode,
   mode,
-}: any) => {
+}: EncryptionAlgorithmSelectorProps) => {
   return (
     <div className="control-group">
       <label>Algorithm Family</label>
 
       <div className="subtab-strip">
-        {ENCRYPTION_VARIANT_GROUPS.map((group) => (
+        {ENCRYPTION_REGISTRY.map((group) => (
           <button
             key={group.key}
             className={`tab-btn ${
@@ -43,7 +52,7 @@ export const EncryptionAlgorithmSelector = ({
           <label>Variant</label>
 
           <div className="subtab-strip">
-            {activeGroup.variants.map((variant: any) => (
+            {activeGroup.variants.map((variant) => (
               <button
                 key={variant.key}
                 className={`tab-btn ${
@@ -70,7 +79,7 @@ export const EncryptionAlgorithmSelector = ({
           <label>Key Size</label>
 
           <div className="subtab-strip">
-            {activeGroup.keySizeOptions.map((opt: any) => (
+            {activeGroup.keySizeOptions.map((opt) => (
               <button
                 key={opt.value}
                 className={`tab-btn ${
@@ -90,15 +99,13 @@ export const EncryptionAlgorithmSelector = ({
       <label>Mode</label>
 
       <div className="subtab-strip">
-        {['encrypt', 'decrypt'].map((m) => (
+        {(['encrypt', 'decrypt'] as const).map((m) => (
           <button
             key={m}
             className={`tab-btn ${
               mode === m ? 'active' : ''
             }`}
-            onClick={() =>
-              setMode(m as 'encrypt' | 'decrypt')
-            }
+            onClick={() => setMode(m)}
           >
             {m}
           </button>
