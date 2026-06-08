@@ -26,15 +26,13 @@ const HashingPresenter = () => {
     compute
   } = useHashComputation();
 
-  const config =
-    getAlgorithmConfig(hashAlgo) ??
-    getAlgorithmConfig(ALGORITHM_KEYS[0] ?? '');
+  const safeHashAlgo = hashAlgo || ALGORITHM_KEYS[0] || '';
+  const config = getAlgorithmConfig(safeHashAlgo);
+  const activeGroup = findGroupForVariant(safeHashAlgo);
 
-  if (!config) {
-    return null;
+  if (!config || !activeGroup) {
+    return <div className="p-4 text-red-500">Error: Hash algorithm configuration not found.</div>;
   }
-
-  const activeGroup = findGroupForVariant(hashAlgo);
 
   const handleSetOutput = (val: string) => {
     updateCurrentState(s => ({ ...s, output: val }));
@@ -57,7 +55,7 @@ const HashingPresenter = () => {
   const algorithmSelect = (
     <HashAlgorithmSelector
       activeGroup={activeGroup}
-      hashAlgo={hashAlgo}
+      hashAlgo={safeHashAlgo}
       setHashAlgo={setHashAlgo}
       currentState={currentState}
       updateCurrentState={updateCurrentState}
@@ -71,16 +69,14 @@ const HashingPresenter = () => {
         onClick={() =>
           compute(
             activeGroup.id,
-            hashAlgo,
+            safeHashAlgo,
             currentState,
             handleSetOutput
           )
         }
         disabled={isComputing}
       >
-        {isComputing
-          ? 'Computing...'
-          : 'Compute Hash'}
+        {isComputing ? 'Computing...' : 'Compute Hash'}
       </ActionButton>
     </div>
   );
@@ -94,8 +90,6 @@ const HashingPresenter = () => {
     />
   );
 
-  const theoryBlocks = activeGroup.theory;
-
   return (
     <HashingView
       title="Data Hashing"
@@ -108,7 +102,7 @@ const HashingPresenter = () => {
       saltControl={saltControl}
       actionButtons={actionButtons}
       outputControl={outputControl}
-      theoryBlocks={theoryBlocks}
+      theoryBlocks={activeGroup.theory}
     />
   );
 };

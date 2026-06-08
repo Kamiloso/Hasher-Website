@@ -118,7 +118,7 @@ export const HASHING_GROUPS: HashAlgorithmGroup[] = [
         id: 'argon2',
         label: 'Argon2',
         saltPolicy: 'recommended',
-        saltLabel: 'Salt (recommended)',
+        saltLabel: 'Salt',
         defaultSalt: '',
         defaultKdf: 'none',
         allowKdf: false,

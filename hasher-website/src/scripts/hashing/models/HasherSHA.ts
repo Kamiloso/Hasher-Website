@@ -8,15 +8,8 @@ export type ShaOperationMode = 'digest' | 'hmac' | 'pbkdf2';
 export interface ShaConfig {
   variant: ShaVariant;
   mode: ShaOperationMode;
-
-  // Optional but required by 'pbkdf2'
-  // Can be used for 'digest' to add extra security
   salt?: string;
-
-  // Required for 'hmac' to provide the secret key for signing
   hmacKey?: string;
-
-  // Number of iterations used only for 'pbkdf2'
   iterations?: number;
 }
 
@@ -26,18 +19,50 @@ export interface ShaProvider {
 
 export class HasherSHA implements ShaProvider {
 
+  /**
+   * Prywatna metoda realizująca HMAC dla SHA3-256.
+   */
+  private hmacSha3_256(keyBytes: Uint8Array, messageBytes: Uint8Array): Uint8Array {
+    const blockSize = 136;
+    let k = keyBytes;
+
+    if (k.length > blockSize) {
+      k = new Uint8Array(sha3_256.create().update(k).array());
+    }
+
+    const paddedKey = new Uint8Array(blockSize);
+    paddedKey.set(k);
+
+    const iKeyPad = new Uint8Array(blockSize);
+    const oKeyPad = new Uint8Array(blockSize);
+
+    for (let i = 0; i < blockSize; i++) {
+      iKeyPad[i] = paddedKey[i] ^ 0x36;
+      oKeyPad[i] = paddedKey[i] ^ 0x5c;
+    }
+
+    const innerData = concatBytes(iKeyPad, messageBytes);
+    const innerHash = new Uint8Array(sha3_256.create().update(innerData).array());
+
+    const outerData = concatBytes(oKeyPad, innerHash);
+    return new Uint8Array(sha3_256.create().update(outerData).array());
+  }
+
   async hash(plainText: string, config: ShaConfig): Promise<string> {
     const { variant, mode } = config;
 
     try {
       // ====================================================================
-      // 1. HMAC (Hash-based Message Authentication Code)
+      // 1. HMAC
       // ====================================================================
       if (mode === 'hmac') {
         if (!config.hmacKey) throw new Error("HMAC mode requires secret key (hmacKey).");
 
         if (variant === 'SHA3-256') {
-          return (sha3_256 as any).hmac(config.hmacKey, plainText);
+          const keyBytes = getBytes(config.hmacKey);
+          const messageBytes = getBytes(plainText);
+          const hmacResult = this.hmacSha3_256(keyBytes, messageBytes);
+          return bufferToHex(hmacResult.buffer as ArrayBuffer);
         }
 
         const keyBytes = getBytes(config.hmacKey);
@@ -61,17 +86,40 @@ export class HasherSHA implements ShaProvider {
       }
 
       // ====================================================================
-      // 2. PBKDF2 (Password-Based Key Derivation Function 2)
+      // 2. PBKDF2 
       // ====================================================================
       if (mode === 'pbkdf2') {
         if (!config.salt) throw new Error("PBKDF2 mode requires salt.");
 
         const passwordBytes = getBytes(plainText);
         const saltBytes = getBytes(config.salt);
-        const iterations = config.iterations || 600000; // Secure minimun by OWASP
+        const iterations = config.iterations || 600000;
 
         if (variant === 'SHA3-256') {
-          throw new Error("PBKDF2 does not support SHA3-256 variant.");
+          // Inicjalizacja soli zgodnie z RFC 2898
+          const saltWithBlockIndex = new Uint8Array(saltBytes.length + 4);
+          saltWithBlockIndex.set(saltBytes);
+          saltWithBlockIndex[saltBytes.length + 3] = 1;
+
+          let u = this.hmacSha3_256(passwordBytes, saltWithBlockIndex);
+          const t = new Uint8Array(u);
+
+          // Rozmiar porcji zapobiegający zamrożeniu przeglądarki
+          const chunkSize = 5000; 
+
+          for (let i = 2; i <= iterations; i++) {
+            u = this.hmacSha3_256(passwordBytes, u);
+            for (let j = 0; j < u.length; j++) {
+              t[j] ^= u[j];
+            }
+
+            // Oddanie kontroli do głównego wątku co określoną liczbę iteracji
+            if (i % chunkSize === 0) {
+              await new Promise(resolve => setTimeout(resolve, 0));
+            }
+          }
+
+          return bufferToHex(t.buffer as ArrayBuffer);
         }
 
         const keyMaterial = await window.crypto.subtle.importKey(
@@ -102,7 +150,7 @@ export class HasherSHA implements ShaProvider {
       }
 
       // ====================================================================
-      // 3. DIGEST (Classic hash function)
+      // 3. DIGEST
       // ====================================================================
       if (mode === 'digest') {
         let dataToHash = getBytes(plainText);
