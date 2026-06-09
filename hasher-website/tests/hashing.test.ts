@@ -16,11 +16,11 @@ if (typeof globalThis.window === 'undefined') {
 // ---------------------------------------------------------
 // IMPORTS 
 // ---------------------------------------------------------
-import { shaAlgorithm, type ShaVariant } from '../src/models/HasherSHA.ts';
-import { md5Algorithm } from '../src/models/HasherMD5.ts';
-import { blakeAlgorithm } from '../src/models/HasherBLAKE.ts';
-import { crcAlgorithm } from '../src/models/HasherCRC.ts';
-import { argon2Algorithm } from '../src/models/HasherArgon.ts';
+import { shaAlgorithm, type ShaVariant } from '../src/scripts/hashing/models/HasherSHA.ts';
+import { md5Algorithm } from '../src/scripts/hashing/models/HasherMD5.ts';
+import { blakeAlgorithm } from '../src/scripts/hashing/models/HasherBLAKE.ts';
+import { crcAlgorithm } from '../src/scripts/hashing/models/HasherCRC.ts';
+import { argonAlgorithm } from '../src/scripts/hashing/models/HasherArgon.ts';
 
 // ---------------------------------------------------------
 // TEST VECTORS
@@ -92,6 +92,15 @@ describe('Active Hashing Algorithms (Digest Mode)', () => {
         });
     }
 
+    describe('CRC32 Validation', () => {
+        for (const test of VERIFIED_VECTORS["CRC32"]) {
+            it(`should correctly hash: ${test.desc}`, async () => {
+                const result = await crcAlgorithm.hash(test.input, { mode: 'digest' });
+                assert.equal(result, test.expected);
+            });
+        }
+    });
+
     describe('BLAKE2b Validation', () => {
         for (const test of VERIFIED_VECTORS["BLAKE2b"]) {
             it.skip(`should correctly hash: ${test.desc}`, async () => {
@@ -109,15 +118,6 @@ describe('Active Hashing Algorithms (Digest Mode)', () => {
             });
         }
     });
-
-    describe('CRC32 Validation', () => {
-        for (const test of VERIFIED_VECTORS["CRC32"]) {
-            it.skip(`should correctly hash: ${test.desc}`, async () => {
-                const result = await crcAlgorithm.hash(test.input, { mode: 'digest' });
-                assert.equal(result, test.expected);
-            });
-        }
-    });
 });
 
 // ---------------------------------------------------------
@@ -125,7 +125,7 @@ describe('Active Hashing Algorithms (Digest Mode)', () => {
 // ---------------------------------------------------------
 describe('Key Derivation Functions (KDFs)', () => {
 
-    it.skip('PBKDF2 should successfully generate a derived key', async () => {
+    it('PBKDF2 should successfully generate a derived key', async () => {
         const result = await shaAlgorithm.hash("password", {
             variant: 'SHA-256',
             mode: 'pbkdf2',
@@ -137,9 +137,9 @@ describe('Key Derivation Functions (KDFs)', () => {
         assert.match(result, /^[a-f0-9]+$/i, "PBKDF2 output is not valid hex");
     });
 
-    it.skip('Argon2 should successfully generate a hash', async () => {
-        const result = await argon2Algorithm.hash("password", {
-            mode: 'argon2',
+    it.skip('Argon2 should successfully generate a hash (Skipped in Node due to Web Worker)', async () => {
+        const result = await argonAlgorithm.hash("password", {
+            mode: 'kdf',
             salt: "random_salt",
             memoryKb: 65536,
             parallelism: 2,
@@ -147,7 +147,5 @@ describe('Key Derivation Functions (KDFs)', () => {
         });
 
         assert.ok(result.length > 0, "Argon2 failed to output a string");
-        // Argon2 output depends heavily on specific implementation returns (raw hex vs encoded string).
-        // This ensures the promise resolves successfully and returns data.
     });
 });
