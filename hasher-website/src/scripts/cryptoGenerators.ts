@@ -6,7 +6,7 @@ export const generateByteSequence = (byteLength: number) => {
   });
 };
 
-// Generates a random text sequence with a label and random suffix (placeholder)
+// Generates a generic random text sequence (legacy/fallback)
 export const generateTextSequence = (label: string) => {
   const suffix = Array.from({ length: 3 }, () => Math.random().toString(36).slice(2, 8).toUpperCase()).join('-');
   return `${label}\n${suffix}`;

@@ -1,3 +1,5 @@
+import * as forge from 'node-forge';
+
 export const useEncryptionHandlers = ({
   configContext,
   mode,
@@ -27,7 +29,7 @@ export const useEncryptionHandlers = ({
       byteValues: { ...s.byteValues, [k]: v }
     }));
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     const action = configContext?.activeGenerateAction;
     if (!action) return;
 
@@ -62,16 +64,10 @@ export const useEncryptionHandlers = ({
       action.fields.forEach((fieldKey: string) => {
         const nextBytes = generateRandomBytes(resolveByteLength(fieldKey));
         
-        if (
-          fieldKey === 'nonce' ||
-          fieldKey === 'iv'
-        ) {
+        if (fieldKey === 'nonce' || fieldKey === 'iv') {
           updateByteField(fieldKey, nextBytes);
 
-        } else if (
-          fieldKey === 'counter'
-        ) {
-          // Inicjalizujemy licznik zerami (00 00 00 00)
+        } else if (fieldKey === 'counter') {
           updateByteField(fieldKey, ['00', '00', '00', '00']);
 
         } else {
@@ -92,33 +88,90 @@ export const useEncryptionHandlers = ({
       return;
     }
 
-    // --- 3. Pola tekstowe (Mock RSA) ---
+    // --- 3. Pola tekstowe (Asymetryczne) ---
     if (action.outputKind === 'text') {
-      action.fields.forEach((fieldKey: string) => {
+      
+      // Obsługa generowania RSA w tle
+      if (activeGroup.key === 'rsa') {
+        const keySize = meta.activeKeySize || 2048;
         
-        if (activeGroup.key === 'rsa') {
-          const keySize = meta.activeKeySize || 2048;
-          const isPublic = fieldKey === 'publicKey';
-          
-          const mockText = isPublic
-            ? `-----BEGIN PUBLIC KEY-----\n[Mocked RSA-${keySize} Public Key Data]\n-----END PUBLIC KEY-----`
-            : `-----BEGIN PRIVATE KEY-----\n[Mocked RSA-${keySize} Private Key Data]\n-----END PRIVATE KEY-----`;
-            
-          updateKeyText(resolveKeyId(fieldKey), mockText);
+        try {
+          const keypair = await new Promise<forge.pki.rsa.KeyPair>((resolve, reject) => {
+            forge.pki.rsa.generateKeyPair({ bits: keySize, workers: -1 }, (err, kp) => {
+              if (err) reject(err);
+              else resolve(kp);
+            });
+          });
+
+          const pubPem = forge.pki.publicKeyToPem(keypair.publicKey);
+          const privPem = forge.pki.privateKeyToPem(keypair.privateKey);
+
+          action.fields.forEach((fieldKey: string) => {
+            if (fieldKey === 'publicKey') {
+              updateKeyText(resolveKeyId(fieldKey), pubPem);
+            } else if (fieldKey === 'privateKey') {
+              updateKeyText(resolveKeyId(fieldKey), privPem);
+            }
+          });
+        } catch (error) {
+          console.error('[RSA Generation Error]', error);
+        }
+        return;
+      }
+
+      // --- Rzeczywiste asynchroniczne generowanie ECC przez Web Crypto API ---
+      if (activeGroup.key === 'ecc') {
+        let namedCurve = 'P-256'; // Domyślny fallback
+        
+        if (meta.variantKey === 'ecc_p256') {
+          namedCurve = 'P-256';
+        } else if (meta.variantKey === 'ecc_p384') {
+          namedCurve = 'P-384';
         }
 
-        if (activeGroup.key === 'ecc') {
-          const curve = meta.variantKey === 'ecc_p256' ? 'secp256r1' : 'secp384r1';
-          const isPublic = fieldKey === 'publicKey';
+        try {
+          // Używamy ECDH jako uniwersalnej bazy do par kluczy szyfrujących ECC
+          const keyPair = await window.crypto.subtle.generateKey(
+            { name: "ECDH", namedCurve },
+            true,
+            ["deriveKey", "deriveBits"]
+          );
 
-          const mockText = isPublic
-            ? `-----BEGIN PUBLIC KEY-----\n[Mocked ECC-${curve} Public Key Data]\n-----END PUBLIC KEY-----`
-            : `-----BEGIN PRIVATE KEY-----\n[Mocked ECC-${curve} Private Key Data]\n-----END PRIVATE KEY-----`;
+          // Eksport sparowanych kluczy do natywnych formatów binarnych (SPKI / PKCS#8)
+          const pubBuffer = await window.crypto.subtle.exportKey('spki', keyPair.publicKey);
+          const privBuffer = await window.crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
 
-          updateKeyText(resolveKeyId(fieldKey), mockText);
+          // Konwersja binarnych buforów ArrayBuffer na ciąg Base64
+          const bufferToBase64 = (buffer: ArrayBuffer) => {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            for (let i = 0; i < bytes.byteLength; i++) {
+              binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+          };
+
+          // Formatowanie ciągu Base64 do bloków PEM o szerokości 64 znaków
+          const formatPem = (b64: string, label: string) => {
+            const lines = b64.match(/.{1,64}/g)?.join('\n') || b64;
+            return `-----BEGIN ${label}-----\n${lines}\n-----END ${label}-----`;
+          };
+
+          const pubPem = formatPem(bufferToBase64(pubBuffer), 'PUBLIC KEY');
+          const privPem = formatPem(bufferToBase64(privBuffer), 'PRIVATE KEY');
+
+          action.fields.forEach((fieldKey: string) => {
+            if (fieldKey === 'publicKey') {
+              updateKeyText(resolveKeyId(fieldKey), pubPem);
+            } else if (fieldKey === 'privateKey') {
+              updateKeyText(resolveKeyId(fieldKey), privPem);
+            }
+          });
+        } catch (error) {
+          console.error(`[ECC ${namedCurve} Generation Error]`, error);
         }
-
-      });
+        return;
+      }
     }
   };
 

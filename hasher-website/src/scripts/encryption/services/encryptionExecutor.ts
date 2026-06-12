@@ -1,5 +1,5 @@
 import { aesAlgorithm } from '../models/EncryptorAes';
-import { chaChaAlgorithm } from '../models/EncryptorChaCha';
+// import { chaChaAlgorithm } from '../models/EncryptorChaCha';
 import { rsaAlgorithm } from '../models/EncryptorRsa';
 import { eccAlgorithm } from '../models/EncryptorEcc';
 import { caesarAlgorithm } from '../models/EncryptorCaesar';
@@ -34,21 +34,21 @@ export const executeEncryption = async (
   // ====================================================================
   // 2. ChaCha
   // ====================================================================
-  if (activeGroupKey === 'chacha') {
-    return await chaChaAlgorithm.encrypt(state.encryptionInput, {
+  /*if (activeGroupKey === 'chacha') {
+    return await chaChaAlgorithm.process(state.encryptionInput, {
       variant: encryptionAlgo,
       key: hexArrayToBytes(state.keyBytes?.symmetric),
       nonce: hexArrayToBytes(state.byteValues?.nonce),
       counter: hexArrayToBytes(state.byteValues?.counter),
       mode: state.mode
     });
-  }
+  }*/
 
   // ====================================================================
   // 3. RSA
   // ====================================================================
   if (activeGroupKey === 'rsa') {
-    return await rsaAlgorithm.encrypt(state.encryptionInput, {
+    return await rsaAlgorithm.process(state.encryptionInput, {
       variant: encryptionAlgo,
       publicKey: state.keyTextValues?.publicKey,
       privateKey: state.keyTextValues?.privateKey,
@@ -60,9 +60,10 @@ export const executeEncryption = async (
   // 4. ECC
   // ====================================================================
   if (activeGroupKey === 'ecc') {
-    return await eccAlgorithm.encrypt(state.encryptionInput, {
+    return await eccAlgorithm.process(state.encryptionInput, {
       variant: encryptionAlgo,
-      publicKey: hexArrayToBytes(state.keyBytes?.publicKey),
+      publicKey: state.keyTextValues?.publicKey,
+      privateKey: state.keyTextValues?.privateKey,
       mode: state.mode
     });
   }

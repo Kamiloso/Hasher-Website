@@ -233,8 +233,8 @@ export const ENCRYPTION_REGISTRY: AlgorithmGroup[] = [
         showCounter: false
       },
       {
-        key: 'rsa_pss',
-        label: 'RSA (PSS)',
+        key: 'rsa_pkcs1',
+        label: 'RSA (PKCS#1 v1.5) - legacy',
         byteFields: [],
         showSalt: false,
         showCounter: false
@@ -269,14 +269,14 @@ export const ENCRYPTION_REGISTRY: AlgorithmGroup[] = [
     variants: [
       {
         key: 'ecc_p256',
-        label: 'ECC (secp256r1)',
+        label: 'ECIES (P-256 / AES-GCM)',
         byteFields: [],
         showSalt: false,
         showCounter: false
       },
       {
         key: 'ecc_p384',
-        label: 'ECC (secp384r1)',
+        label: 'ECIES (P-384 / AES-GCM)',
         byteFields: [],
         showSalt: false,
         showCounter: false
