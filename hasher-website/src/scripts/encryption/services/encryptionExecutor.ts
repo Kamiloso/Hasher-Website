@@ -22,7 +22,7 @@ export const executeEncryption = async (
   // 1. AES (GCM, CBC, CTR)
   // ====================================================================
   if (activeGroupKey === 'aes') {
-    return await aesAlgorithm.encrypt(state.encryptionInput, {
+    return await aesAlgorithm.process(state.encryptionInput, {
       variant: encryptionAlgo,
       key: hexArrayToBytes(state.keyBytes?.symmetric),
       iv: hexArrayToBytes(state.byteValues?.iv),

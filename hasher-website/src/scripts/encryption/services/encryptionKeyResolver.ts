@@ -27,17 +27,9 @@ export const resolveEncryptionMeta = (
     ? activeKeySize
     : activeKeyField?.byteLength ?? 0;
 
-  const symmetricKeyId = activeGroup.keySizeOptions?.length
-    ? `symmetric_${activeKeySize}`
-    : 'symmetric';
-
-  const publicKeyId = activeGroup.keySizeOptions?.length
-    ? `publicKey_${activeKeySize}`
-    : 'publicKey';
-
-  const privateKeyId = activeGroup.keySizeOptions?.length
-    ? `privateKey_${activeKeySize}`
-    : 'privateKey';
+  const symmetricKeyId = 'symmetric';
+  const publicKeyId = 'publicKey';
+  const privateKeyId = 'privateKey';
 
   const unit = activeGroup.mode === 'asymmetric' ? 'bits' : 'bytes';
   const symmetricKeyLabel = activeGroup.keySizeOptions?.length

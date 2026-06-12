@@ -75,7 +75,7 @@ export const ENCRYPTION_REGISTRY: AlgorithmGroup[] = [
     keySizeLabel: 'AES Key Size',
     keySizeOptions: [
       { value: 16, label: '16 bytes' },
-      { value: 24, label: '24 bytes' },
+      //{ value: 24, label: '24 bytes' }, -- web API says it's not supported
       { value: 32, label: '32 bytes' }
     ],
     keySizeDefault: 32,
@@ -137,7 +137,7 @@ export const ENCRYPTION_REGISTRY: AlgorithmGroup[] = [
       }
     ]
   },
-  {
+  /*{
     key: 'chacha',
     label: 'ChaCha',
     mode: 'stream',
@@ -190,7 +190,7 @@ export const ENCRYPTION_REGISTRY: AlgorithmGroup[] = [
         ]
       }
     ]
-  },
+  },*/
   {
     key: 'rsa',
     label: 'RSA',
