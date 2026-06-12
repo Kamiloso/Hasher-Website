@@ -89,7 +89,9 @@ export class HasherSHA implements ShaProvider {
       // 2. PBKDF2 
       // ====================================================================
       if (mode === 'pbkdf2') {
-        if (!config.salt) throw new Error("PBKDF2 mode requires salt.");
+        if (!config.salt) {
+          throw new Error("PBKDF2 mode requires salt.");
+        }
 
         const passwordBytes = getBytes(plainText);
         const saltBytes = getBytes(config.salt);
