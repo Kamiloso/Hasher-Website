@@ -72,7 +72,9 @@ export class HasherBLAKE implements BlakeProvider {
       // 1. HMAC
       // ====================================================================
       if (mode === 'hmac') {
-        if (!config.hmacKey) config.hmacKey = '';
+        if (!config.hmacKey || config.hmacKey.trim() === ''){
+          throw new Error("HMAC mode requires not null value.");
+        }
 
         const keyBytes = getBytes(config.hmacKey);
         const messageBytes = getBytes(plainText);

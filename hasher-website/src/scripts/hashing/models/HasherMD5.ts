@@ -29,8 +29,8 @@ export class HasherMD5 implements Md5Provider {
       // 1. HMAC (Hash-based Message Authentication Code)
       // ====================================================================
       if (mode === 'hmac') {
-        if (!config.hmacKey) {
-          config.hmacKey = '';
+        if (!config.hmacKey || config.hmacKey.trim() === '') {
+          throw new Error("HMAC mode requires not null value.");
         }
 
         return (md5 as any).hmac(config.hmacKey, plainText);

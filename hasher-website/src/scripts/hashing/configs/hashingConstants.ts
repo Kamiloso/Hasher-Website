@@ -150,7 +150,7 @@ export const HASHING_GROUPS: HashAlgorithmGroup[] = [
     variants: [
       {
         id: 'blake2b',
-        label: 'BLAKE2b',
+        label: 'BLAKE2b-512',
         saltPolicy: 'optional',
         saltLabel: 'Salt (optional)',
         defaultSalt: '',
