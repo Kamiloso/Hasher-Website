@@ -1,5 +1,5 @@
 export const chaChaAlgorithm = {
-  encrypt: async (input: string, options: { 
+  encrypt: async (_input: string, options: { 
     variant: string, 
     key: Uint8Array, 
     nonce: Uint8Array, 

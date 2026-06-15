@@ -1,0 +1,12 @@
+#to jest tylko testowo, ale maksymalnie zbliżone do produkcyjnego docker-compose.yaml
+
+services:
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hasher-website-test
+    restart: unless-stopped
+    # Wystawiamy port na zewnątrz tylko do celów testowych
+    ports:
+      - "8080:80"

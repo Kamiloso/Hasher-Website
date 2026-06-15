@@ -1,30 +1,32 @@
-import './App.css';
-import { useEffect, useState } from 'react';
-import Navigation, { type TabType } from './components/Navigation';
-import EncryptionPresenter from './scripts/encryption/EncryptionPresenter';
-import HashingPresenter from './scripts/hashing/HashingPresenter';
+import "./App.css";
+import { useEffect, useState } from "react";
+import Navigation, { type TabType } from "./components/Navigation";
+import EncryptionPresenter from "./scripts/encryption/EncryptionPresenter";
+import HashingPresenter from "./scripts/hashing/HashingPresenter";
 
 const getInitialTheme = () => {
-  const storedTheme = window.localStorage.getItem('theme');
+  const storedTheme = window.localStorage.getItem("theme");
 
-  if (storedTheme === 'light' || storedTheme === 'dark') {
+  if (storedTheme === "light" || storedTheme === "dark") {
     return storedTheme;
   }
 
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 };
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('encrypt');
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => getInitialTheme());
+  const [activeTab, setActiveTab] = useState<TabType>("encrypt");
+  const [theme, setTheme] = useState<"light" | "dark">(() => getInitialTheme());
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem('theme', theme);
+    window.localStorage.setItem("theme", theme);
   }, [theme]);
 
   useEffect(() => {
-    document.title = 'Encryption & Hashing Algorithms';
+    document.title = "Encryption & Hashing Algorithms";
   }, []);
 
   return (
@@ -39,24 +41,34 @@ function App() {
           <button
             type="button"
             className="theme-toggle"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            aria-pressed={theme === 'dark'}
-            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-pressed={theme === "dark"}
+            aria-label={
+              theme === "dark"
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
           >
             <span className="theme-toggle__icon" aria-hidden="true">
-              {theme === 'dark' ? '◐' : '◑'}
+              {theme === "dark" ? "◐" : "◑"}
             </span>
-            <span>{theme === 'dark' ? 'Dark mode' : 'Light mode'}</span>
+            <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
           </button>
         </div>
         <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
       </header>
 
       <main className="app-content">
-        <section hidden={activeTab !== 'encrypt'} aria-hidden={activeTab !== 'encrypt'}>
+        <section
+          hidden={activeTab !== "encrypt"}
+          aria-hidden={activeTab !== "encrypt"}
+        >
           <EncryptionPresenter />
         </section>
-        <section hidden={activeTab !== 'hash'} aria-hidden={activeTab !== 'hash'}>
+        <section
+          hidden={activeTab !== "hash"}
+          aria-hidden={activeTab !== "hash"}
+        >
           <HashingPresenter />
         </section>
       </main>

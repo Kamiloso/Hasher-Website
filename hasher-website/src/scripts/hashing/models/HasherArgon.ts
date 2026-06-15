@@ -46,7 +46,7 @@ export class HasherArgon implements ArgonProvider {
         const hashLength = config.hashLength || 32;
 
         return new Promise((resolve, reject) => {
-            const worker = new Worker(new URL('./argon.worker.ts', import.meta.url), { type: 'module' });
+            const worker = new Worker(new URL('./Argon.worker.ts', import.meta.url), { type: 'module' });
 
             worker.onmessage = (event) => {
                 const { success, result, error } = event.data;

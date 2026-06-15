@@ -2,7 +2,7 @@ import * as forge from 'node-forge';
 
 export const useEncryptionHandlers = ({
   configContext,
-  mode,
+  mode: _mode,
   meta,
   updateCurrentState
 }: any) => {
