@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GITHUB_ACTIONS ? "/Hasher-Website/" : "./",
+  base: "/Hasher-Website/",
   server: {
     watch: {
       usePolling: true,
