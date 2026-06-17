@@ -19,7 +19,7 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Kopiujemy zbudowane pliki z pierwszego etapu (katalog dist) do Nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html/Hasher-Website
 
 # Port, na którym nasłuchuje Nginx wewnątrz sieci Dockera
 EXPOSE 80
