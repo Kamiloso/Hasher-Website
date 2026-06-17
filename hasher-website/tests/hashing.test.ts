@@ -56,7 +56,7 @@ const VERIFIED_VECTORS = {
     ],
     "BLAKE2b": [
         { input: "", expected: "786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce", desc: "Empty string (512-bit)" },
-        { input: "abc", expected: "bddd813c634239723171ef3fee98579b94964e3bb1cb3e427262c8c068d52319da459e774bfde5d4e3661c6bfa6f1bc88f00b46eb05ce2399201a18c645b23d9", desc: "Standard short string (512-bit)"}
+        { input: "abc", expected: "ba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d17d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923", desc: "Standard short string (512-bit)"}
     ],
     "BLAKE3": [
         { input: "", expected: "af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262", desc: "Empty string" }
@@ -103,8 +103,8 @@ describe('Active Hashing Algorithms (Digest Mode)', () => {
 
     describe('BLAKE2b Validation', () => {
         for (const test of VERIFIED_VECTORS["BLAKE2b"]) {
-            it.skip(`should correctly hash: ${test.desc}`, async () => {
-                const result = await blakeAlgorithm.hash(test.input, { variant: 'BLAKE2b', mode: 'digest' });
+            it(`should correctly hash: ${test.desc}`, async () => {
+                const result = await blakeAlgorithm.hash(test.input, { variant: 'blake2b', mode: 'digest' });
                 assert.equal(result, test.expected);
             });
         }
@@ -112,8 +112,8 @@ describe('Active Hashing Algorithms (Digest Mode)', () => {
 
     describe('BLAKE3 Validation', () => {
         for (const test of VERIFIED_VECTORS["BLAKE3"]) {
-            it.skip(`should correctly hash: ${test.desc}`, async () => {
-                const result = await blakeAlgorithm.hash(test.input, { variant: 'BLAKE3', mode: 'digest' });
+            it(`should correctly hash: ${test.desc}`, async () => {
+                const result = await blakeAlgorithm.hash(test.input, { variant: 'blake3', mode: 'digest' });
                 assert.equal(result, test.expected);
             });
         }
