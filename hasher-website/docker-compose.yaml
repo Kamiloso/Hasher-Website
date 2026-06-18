@@ -1,8 +1,6 @@
 services:
   web-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/kamiloso/hasher-website:main
     container_name: hasher-website
     restart: unless-stopped
 
